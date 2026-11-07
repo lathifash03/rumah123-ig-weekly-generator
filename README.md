@@ -130,6 +130,9 @@ cost. Defaults are 3, 3 and 2.
   block rules, kept so the before and after are both visible.
 - `eval/seeded_results.md` and `eval/seeded_run.json` — the seeded-error test
   and its raw trial data.
+- `review/YYYY-Www.md` — the hand review of a week's approved captions, with a
+  verdict and the edited text where one was needed. Written by a human after
+  reading the drafts, not generated.
 
 Variants carry stable IDs `A`, `B` and `C`, derived from the variant index, so
 the same variant has the same label in the draft heading, the draft front
@@ -241,6 +244,32 @@ counts rather than one number.
 
 No prompt was changed in response to the seeded results.
 
+The seeded set does not cover the error that the human review actually found.
+There is no case in it where a verified quote carries a wrongly paraphrased
+claim, so the claim checker was never tested against that failure mode, and
+the 90% figure above says nothing about it. The one real example of it, the 57
+percent misread, got past every check.
+
+## Human review
+
+`review/2026-W45.md` is a hand review of all six captions the pipeline
+approved in run 6, with a verdict on each: approved, approved with edit, or
+rejected.
+
+Three of six were approved as generated or with a one-sentence edit. Three
+were rejected, all for the same error.
+
+Every finding in it came from reading output the gate had already marked
+clean. No check failed on any of those six captions.
+
+The worst case is worth stating here, because it bounds what the rest of this
+README claims. All three approved captions for the Manggarai item say that 57
+percent of interested buyers are aged 25 to 35. The article says the age range
+is 25 to 35 and that about 57 percent of them are unmarried. The 57 percent
+belongs to being unmarried, not to the age bracket. The quote was verified
+correctly, character for character. The misreading was in the extractor's
+own summary of that quote, which nothing verifies.
+
 ## Limitations
 
 - **The claim check is an LLM and is imperfect.** Code verifies its quotes,
@@ -279,6 +308,29 @@ No prompt was changed in response to the seeded results.
   citing no figure is not caught, and a figure that also appears in an
   unhedged fact carries no obligation, so a genuine dropped hedge can slip
   through when two facts share a number.
+- **The extractor's claim is not verified, only its quote.** Each fact has a
+  `quote` copied from the article, which code checks as a substring, and a
+  `claim` written by the model, which nothing checks against that quote. A
+  genuine quote can therefore carry a wrong summary. This is not theoretical:
+  in run 6 a quote saying "rentang usia peminatnya 25-35 tahun dan sekitar 57
+  persen di antaranya belum menikah" produced the claim "57 persen berusia
+  25-35 tahun dan belum menikah", and all three approved captions for that
+  item repeated it. The quote verified, the numbers matched, and the gate
+  passed all three. See `review/2026-W45.md`.
+- **The claim check only constrains numbers.** A caption sentence is checked
+  for whether its figures appear in the supporting quote. A clause with no
+  figure in it is not constrained, so a non-numeric claim riding alongside a
+  numeric one passes. Run 6 variant B of item 1 said "mayoritas pembelian
+  rumah dilakukan lewat KPR", dropping the "di pasar primer" that the fact
+  specifies, which widens the claim beyond the survey. The 7,47 persen in the
+  same sentence checked out, so the sentence passed.
+- **Omissions are invisible to every check here.** Every rule asks whether
+  what the caption says is supported. None asks whether what it leaves out
+  matters. The approved FLPP caption gives the rate and the price ceiling and
+  never mentions that FLPP has income eligibility limits, so a reader above
+  the ceiling learns nothing that would tell them so. No rule in this
+  repository can detect that, and none is planned, because it needs editorial
+  judgement rather than a check.
 - **Wrong attribution is the least reliable check.** Crediting a Bank
   Indonesia figure to BPS is invisible to every code rule, so it depends
   entirely on the claim checker, which caught it in 2 of 3 repeats on the
@@ -394,6 +446,13 @@ comes from.
   generator is being asked to satisfy twelve rules at once from a prompt; some
   of them would be better applied as a deterministic repair, the way the
   hashtag line already is.
+- Check the extractor's claim against its own quote. This is the single
+  highest-value fix available: it is the gap that let the 57 percent misread
+  through, and it is checkable, since the claim and the quote sit side by side
+  in one object. A second call that only asks "is this claim a fair reading of
+  this quote" would have caught it.
+- Constrain non-numeric clauses, not only figures. Dropping "di pasar primer"
+  changes what a sentence claims as much as changing a number would.
 - Give the hedge rule something better than shared figures to match sentences
   to facts. Matching on numbers is what pure code can do, but it misses a
   hedge dropped from a sentence that cites no number.

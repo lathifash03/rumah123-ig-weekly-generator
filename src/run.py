@@ -9,9 +9,24 @@ import argparse
 import sys
 
 from . import draft, extract, filter as filter_mod, rank, retry
-from .config import ConfigError, env
+from .config import ROOT, ConfigError, env
 from .llm import LLM
 from .runlog import RunLog
+
+
+def write_logs(log: RunLog):
+    """Write run_log.json plus a timestamped copy.
+
+    run_log.json stays the current-run path that eval/run_eval.py reads. The
+    timestamped copy exists because runs 1 to 4 of this project each
+    overwrote run_log.json and were never committed, so the evidence for what
+    went wrong in them survives only in commit messages.
+    """
+    stamp = log.started.strftime("%Y%m%dT%H%M%SZ")
+    archive = log.write(ROOT / f"run_log_{stamp}.json")
+    current = log.write()
+    print(f"log: {current.name} (archived as {archive.name})")
+    return current
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -41,8 +56,8 @@ def main(argv: list[str] | None = None) -> int:
     if not items:
         log.error("no items fetched from any feed")
         log.finish("no_items", llm.usage.as_dict())
-        log.write()
-        print("no items fetched. run_log.json written.")
+        write_logs(log)
+        print("no items fetched.")
         return 1
 
     # --- step 2: filter and dedupe -------------------------------------------
@@ -57,8 +72,8 @@ def main(argv: list[str] | None = None) -> int:
     if not deduped:
         log.error("no relevant items after filtering")
         log.finish("no_relevant_items", llm.usage.as_dict())
-        log.write()
-        print("no relevant items. run_log.json written.")
+        write_logs(log)
+        print("no relevant items.")
         return 1
 
     # --- step 3: rank ---------------------------------------------------------
@@ -67,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         log.error(f"ranking failed: {type(exc).__name__}: {exc}")
         log.finish("rank_failed", llm.usage.as_dict())
-        log.write()
+        write_logs(log)
         print(f"ranking failed: {exc}", file=sys.stderr)
         return 1
     log.set("ranking", decisions)
@@ -128,8 +143,9 @@ def main(argv: list[str] | None = None) -> int:
     log.count("drafts_written", len(written))
     log.set("drafts", written)
     log.finish("ok" if written else "no_drafts", llm.usage.as_dict())
-    path = log.write()
-    print(f"\n{len(written)} draft(s) written. log: {path.name}")
+    print()
+    write_logs(log)
+    print(f"{len(written)} draft(s) written.")
     print(f"tokens: {llm.usage.as_dict()}")
     return 0 if written else 1
 
