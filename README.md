@@ -38,7 +38,7 @@ flowchart TD
     F -->|yes| H[verified facts]
     H --> I[generate.py<br/>LLM writes caption body<br/>+ picks topic hashtag]
     I --> J[code assembles<br/>#Rumah123 + topic]
-    J --> K{validate.py<br/>9 rules, pure code<br/>no LLM}
+    J --> K{validate.py<br/>16 rules, pure code<br/>no LLM}
     K -->|fail| R[retry.py<br/>send exact failure list<br/>+ previous caption<br/>max 2 retries]
     K -->|pass| L{claimcheck.py<br/>LLM labels every sentence}
     L --> M{code verifies:<br/>coverage, quotes,<br/>figures in quote}
@@ -111,7 +111,7 @@ extraction step depends on.
 ## How to run
 
 ```bash
-.venv/bin/python -m pytest -q          # 322 tests, no API key needed
+.venv/bin/python -m pytest -q          # 325 tests, no API key needed
 .venv/bin/python -m src.run            # the pipeline, needs the API key
 .venv/bin/python eval/run_eval.py      # scores run_log.json into eval/results.md
 
