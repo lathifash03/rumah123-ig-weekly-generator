@@ -51,10 +51,42 @@ relevance:
     - "^potret"
 
 dedupe:
-  # Titles with a similarity ratio at or above this are treated as the same
-  # story. The detik IKN "Rusun MBR" cluster during verification was four
-  # near-identical headlines, which is what this guards against.
-  title_similarity_threshold: 0.82
+  # Two headlines are treated as the same story when EITHER signal fires.
+  #
+  # Both thresholds were measured, not guessed. Across the 43 candidates
+  # fetched on 2026-11-07, headlines that genuinely retold one story reached a
+  # character-sequence ratio of at most 0.64 and a content-word overlap of at
+  # most 0.50. An earlier single threshold of 0.82 therefore deduplicated
+  # nothing at all, and nine separate headlines about one subsidised apartment
+  # project in Manggarai all reached the ranker.
+  #
+  # These are tuned on one week of real headlines and are the most likely part
+  # of the filter to need revisiting on other weeks.
+  title_sequence_threshold: 0.62
+  title_token_overlap_threshold: 0.42
+
+  # Second signal: two headlines are the same story when they share at least
+  # this many SPECIFIC words with a high combined rarity score. Rarity is
+  # log(N / document frequency) across the week's candidates, and the
+  # relevance keywords are excluded because every candidate shares those.
+  #
+  # The score is sum(log(N / document frequency)) over shared specific words,
+  # divided by log(N) so it does not grow with the size of the week's batch.
+  #
+  # Calibrated on the 43 candidates of 2026-11-07. Retellings of one story
+  # scored 1.59 and above. The nearest non-duplicates scored 1.52 and below:
+  # an Australian house-price story against an Indonesian one, a UK
+  # interest-rate story against an Indonesian one, and two different Jakarta
+  # development stories. 1.55 sits in that gap.
+  #
+  # Known limits, both accepted deliberately:
+  # - A cluster whose members share only ONE specific word is not caught. The
+  #   four IKN headlines share "ikn" and nothing else specific, so they still
+  #   reach the ranker. One coincidental rare word is too weak to act on.
+  # - These numbers come from one week of headlines. This is the part of the
+  #   filter most likely to need revisiting.
+  story_rarity_score_threshold: 1.55
+  min_shared_specific_words: 2
 
 caption:
   max_words_excluding_hashtags: 90

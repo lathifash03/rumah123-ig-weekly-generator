@@ -4,6 +4,7 @@ Everything here is pure code. No LLM is asked to count, compare or judge.
 """
 from __future__ import annotations
 
+import math
 import re
 import unicodedata
 
@@ -188,13 +189,128 @@ def keyword_matches(text: str, keywords: list[str]) -> list[str]:
     return hits
 
 
+# Common Indonesian function words and headline filler. Removed before token
+# comparison so that overlap reflects the subject, not the grammar.
+# Function words, plus the framing words Indonesian headlines use to package a
+# story ("kabar", "fakta", "begini"). Those are removed because they appear in
+# unrelated headlines every week and say nothing about which story a headline
+# covers.
+#
+# Deliberately NOT removed: words like "orang", "500" or "dijual". They look
+# generic, but they are what identifies a story cluster. Removing them dropped
+# the Manggarai cluster's similarity score from 1.59 to 1.01 and the cluster
+# stopped being detected at all.
+_TITLE_STOPWORDS = frozenset("""
+di ke dari dan yang untuk pada jadi ada baru masih sudah belum tak nggak
+bakal akan juga tapi usai saat begini ini itu dengan atau sih kok para
+nya oleh buat bisa mau kini dulu lagi agar karena dalam atas bagi
+kabar fakta potret simak catat resmi terkini terbaru nasib asal usul
+""".split())
+
+
+def _title_tokens(title: str) -> set[str]:
+    cleaned = normalize_ws(re.sub(r"[^\w\s]", " ", (title or "").lower()))
+    return {w for w in cleaned.split()
+            if w not in _TITLE_STOPWORDS and len(w) > 2}
+
+
 def title_similarity(a: str, b: str) -> float:
-    """Token-set similarity of two titles, for near-duplicate detection."""
+    """Character-sequence similarity of two normalised titles."""
     from difflib import SequenceMatcher
 
     na = normalize_ws(re.sub(r"[^\w\s]", " ", (a or "").lower()))
     nb = normalize_ws(re.sub(r"[^\w\s]", " ", (b or "").lower()))
     return SequenceMatcher(None, na, nb).ratio()
+
+
+def title_token_overlap(a: str, b: str) -> float:
+    """Jaccard overlap of the content words of two titles."""
+    ta, tb = _title_tokens(a), _title_tokens(b)
+    union = ta | tb
+    if not union:
+        return 0.0
+    return len(ta & tb) / len(union)
+
+
+def _document_frequencies(titles: list[str]) -> dict[str, int]:
+    df: dict[str, int] = {}
+    for title in titles:
+        for token in _title_tokens(title):
+            df[token] = df.get(token, 0) + 1
+    return df
+
+
+def story_signature_scorer(titles: list[str], topic_words: set[str]):
+    """Build a same-story scorer calibrated on this week's candidate titles.
+
+    Returns a function (a, b) -> (score, shared_tokens).
+
+    Shared words are weighted by rarity, log(N / df), so a word used by most
+    of the week's headlines counts for little and a proper noun counts for a
+    lot. Topic words are excluded entirely: they are the relevance keywords
+    that selected every candidate in the first place, so two headlines sharing
+    "harga rumah" or "suku bunga" have shown nothing about being the same
+    story.
+
+    Measured on the 43 candidates of 2026-11-07, this is what separates the
+    cases. Retellings of one story shared specific words such as "manggarai",
+    "senator" or "groundbreaking". The two worst false pairs - an Australian
+    house-price story against an Indonesian one, and a UK interest-rate story
+    against an Indonesian one - shared only topic words.
+
+    The sum is divided by log(N) so the score does not grow with the size of
+    the batch. Without that normalisation a threshold calibrated on a busy
+    week silently stops firing on a quiet one, since every individual
+    log(N / df) term shrinks as N falls.
+    """
+    total = max(1, len(titles))
+    df = _document_frequencies(titles)
+    scale = math.log(total) if total > 1 else 1.0
+
+    def score(a: str, b: str) -> tuple[float, list[str]]:
+        shared = (_title_tokens(a) & _title_tokens(b)) - topic_words
+        if not shared:
+            return 0.0, []
+        value = sum(math.log(total / df[tok]) for tok in shared if df.get(tok))
+        return value / scale, sorted(shared)
+
+    return score
+
+
+def titles_are_same_story(
+    a: str,
+    b: str,
+    seq_threshold: float,
+    score_threshold: float,
+    min_shared: int,
+    scorer=None,
+) -> tuple[bool, dict]:
+    """Whether two headlines cover the same story.
+
+    Two signals, because neither works alone on real headlines:
+
+    - A character-sequence ratio catches near-identical wording. On its own it
+      is useless here: genuine retellings reached only about 0.64, so the
+      original single threshold of 0.82 deduplicated nothing at all.
+    - A rarity-weighted count of shared specific words catches a family of
+      retellings worded differently. Nine headlines covered one subsidised
+      apartment project in Manggarai and four covered one block in IKN.
+
+    Both a minimum number of shared specific words and a minimum rarity score
+    are required, so that one coincidental rare word is not enough.
+    """
+    seq = title_similarity(a, b)
+    score, shared = (0.0, [])
+    if scorer is not None:
+        score, shared = scorer(a, b)
+
+    by_wording = seq >= seq_threshold
+    by_subject = len(shared) >= min_shared and score >= score_threshold
+    return (by_wording or by_subject), {
+        "sequence_ratio": round(seq, 3),
+        "shared_specific_words": shared,
+        "rarity_score": round(score, 2),
+    }
 
 
 def slugify(text: str, max_len: int = 48) -> str:

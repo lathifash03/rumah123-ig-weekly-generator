@@ -68,8 +68,7 @@ def test_duplicate_url_is_dropped():
 
 
 def test_near_identical_titles_are_deduped():
-    """Regression: the live detik feed carried four near-identical headlines
-    about the same IKN apartment block."""
+    """Near-identical wording is caught by the sequence-ratio signal."""
     items = [
         mk("Rusun MBR di IKN Sedikit Lagi Selesai, Disewakan atau Dijual?",
            "https://a.co/1"),
@@ -78,8 +77,73 @@ def test_near_identical_titles_are_deduped():
     ]
     kept, dropped = dedupe(items)
     assert len(kept) == 1
-    assert dropped[0]["reason"] == "similar_title"
-    assert dropped[0]["similarity"] >= 0.82
+    assert dropped[0]["reason"] == "same_story"
+    assert dropped[0]["sequence_ratio"] >= 0.62
+
+
+# Same-story detection weighs shared words by how rare they are across the
+# batch, so these fixtures use a realistic batch. In production a week carries
+# roughly 40 candidates. With only two titles every shared word appears in
+# every document and carries no information by construction.
+DISTRACTORS = [
+    "Survei BI: Harga Rumah Naik Tipis, Penjualan Anjlok 8,43 Persen",
+    "Penjualan Rumah Lesu, KPR Masih Jadi Andalan",
+    "Suku Bunga di Inggris Sentuh 4%, Pertama Kali Naik dalam 3 Tahun",
+    "Kondisi Industri Keuangan RI di Tengah Suku Bunga Tinggi",
+    "Harga Rumah di Australia Anjlok 7 Bulan Beruntun",
+    "Rusun Benhil II Berdiri Sejak 1994, Kini Kumuh Butuh Perhatian",
+    "Pinggiran Jakarta Masih Dilirik Pencari Rumah, Pengembang Sasar Gen-Z",
+    "PKP Gandeng Kemenkum, Godok Regulasi Bangun Rumah Makin Sat Set",
+    "Asal Usul Penthouse: Dulu Kamar Pembantu, Kini Jadi Rumah Orang Tajir",
+    "Bos Tapera Maunya Rusun Subsidi Terjual 10.000 Unit, tapi Baru Laku 25",
+]
+
+
+def with_distractors(*titles):
+    """A realistic batch: the titles under test plus unrelated candidates."""
+    items = [mk(t, f"https://a.co/t{n}") for n, t in enumerate(titles)]
+    items += [mk(t, f"https://d.co/{n}") for n, t in enumerate(DISTRACTORS)]
+    return items
+
+
+def test_retellings_of_one_story_are_deduped():
+    """Different wording, same story, caught by shared specific words.
+
+    Real headlines from the 2026-11-07 fetch, where nine separate articles
+    covered this one project.
+    """
+    items = with_distractors(
+        "Ada 1.500 Orang Mau Beli Rusun Subsidi Manggarai, Kapan Mulai Dijual?",
+        "Belum Resmi Dijual, Rusun Subsidi di Manggarai Sudah Diserbu 1.500 Orang",
+    )
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) == 1, f"kept {under_test}, dropped {dropped}"
+    merge = next(d for d in dropped if d["reason"] == "same_story")
+    assert "manggarai" in merge["shared_specific_words"]
+    assert merge["rarity_score"] >= 1.55
+
+
+def test_dedupe_recall_is_partial_and_that_is_known():
+    """Documents a real limit rather than asserting a recall the rule has not
+    got.
+
+    Headlines retelling one story in wording that shares only a single
+    specific word are NOT merged, because one coincidental rare word is too
+    weak a signal to act on. On the 2026-11-07 fetch this left four IKN
+    headlines, which share "ikn" and nothing else specific, all reaching the
+    ranker.
+    """
+    items = with_distractors(
+        "Kabar Baru dari IKN: Rusun buat MBR Hampir Rampung!",
+        "Rusun MBR di IKN Tipe 36, Penghuni Tinggal Bawa Badan",
+    )
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) == 2, (
+        "if this now merges, dedupe recall improved and the README limitation "
+        "should be updated"
+    )
 
 
 def test_distinct_stories_are_both_kept():
@@ -88,6 +152,40 @@ def test_distinct_stories_are_both_kept():
     kept, dropped = dedupe(items)
     assert len(kept) == 2
     assert dropped == []
+
+
+def test_same_topic_different_country_is_not_merged():
+    """Regression: these two share only topic words ("harga", "rumah") plus
+    the generic "anjlok", and are genuinely different stories. An earlier
+    rarity rule that counted topic words merged them."""
+    items = with_distractors(
+        "Harga Rumah di Australia Anjlok 7 Bulan Beruntun Terparah 40 Tahun",
+        "Survei BI: Harga Rumah Indonesia Naik Tipis Kuartal Ketiga",
+    )
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) == 2, f"wrongly merged: {dropped}"
+
+
+def test_same_topic_different_country_interest_rates_not_merged():
+    items = with_distractors(
+        "Kondisi Industri Keuangan RI di Tengah Ancaman Inflasi Tinggi",
+        "Suku Bunga di Inggris Sentuh 4 Persen Pertama Kali dalam 3 Tahun",
+    )
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) == 2, f"wrongly merged: {dropped}"
+
+
+def test_one_shared_specific_word_is_not_enough():
+    """One coincidental rare word must not collapse two stories."""
+    items = with_distractors(
+        "Proyek Pembangunan di Manggarai Dilanjutkan Pemerintah",
+        "Kuliner Manggarai Ramai Dikunjungi Wisatawan Akhir Pekan",
+    )
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) == 2, f"wrongly merged: {dropped}"
 
 
 def test_dedupe_records_what_it_was_a_duplicate_of():

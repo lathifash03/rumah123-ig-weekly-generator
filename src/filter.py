@@ -6,7 +6,11 @@ from urllib.parse import urlsplit, urlunsplit
 
 from .config import rules
 from .models import Item
-from .textutil import keyword_matches, title_similarity
+from .textutil import (
+    keyword_matches,
+    story_signature_scorer,
+    titles_are_same_story,
+)
 
 _TRACKING = re.compile(r"^(utm_|fbclid|gclid|ref|source|campaign)", re.I)
 
@@ -51,12 +55,28 @@ def relevant(items: list[Item]) -> tuple[list[Item], list[dict]]:
 
 
 def dedupe(items: list[Item]) -> tuple[list[Item], list[dict]]:
-    """Drop exact URL duplicates then fuzzy title duplicates.
+    """Drop exact URL duplicates, then headlines covering the same story.
 
-    The fuzzy pass matters: the live detik feed carried four near-identical
-    headlines about the same IKN apartment block.
+    The second pass carries the weight here. A property desk retells one story
+    many times a week: the live detik feed carried nine separate headlines
+    about the same subsidised apartment project in Manggarai and four about the
+    same block in IKN. Without this, the ranker spends its budget choosing
+    between retellings of one story.
     """
-    threshold = rules()["dedupe"]["title_similarity_threshold"]
+    cfg = rules()["dedupe"]
+    seq_threshold = cfg["title_sequence_threshold"]
+    score_threshold = cfg["story_rarity_score_threshold"]
+    min_shared = cfg["min_shared_specific_words"]
+
+    # The relevance keywords are what every candidate has in common, so they
+    # carry no information about which story a headline covers.
+    topic_words = {
+        word
+        for kw in rules()["relevance"]["keywords"]
+        for word in kw.lower().split()
+    }
+    scorer = story_signature_scorer([i.title for i in items], topic_words)
+
     kept: list[Item] = []
     dropped: list[dict] = []
     seen_urls: dict[str, str] = {}
@@ -68,17 +88,25 @@ def dedupe(items: list[Item]) -> tuple[list[Item], list[dict]]:
                             "reason": "duplicate_url",
                             "duplicate_of": seen_urls[norm]})
             continue
-        twin = next(
-            (k for k in kept
-             if title_similarity(item.title, k.title) >= threshold), None
-        )
+
+        twin = None
+        scores: dict = {}
+        for candidate in kept:
+            same, scores = titles_are_same_story(
+                item.title, candidate.title, seq_threshold,
+                score_threshold, min_shared, scorer)
+            if same:
+                twin = candidate
+                break
+
         if twin is not None:
             dropped.append({"url": item.url, "title": item.title,
-                            "reason": "similar_title",
+                            "reason": "same_story",
                             "duplicate_of": twin.url,
-                            "similarity": round(
-                                title_similarity(item.title, twin.title), 3)})
+                            "duplicate_of_title": twin.title,
+                            **scores})
             continue
+
         seen_urls[norm] = item.url
         kept.append(item)
     return kept, dropped

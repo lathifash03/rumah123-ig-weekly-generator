@@ -155,3 +155,71 @@ def test_title_similarity_distinguishes_different_stories():
 
 def test_slugify():
     assert t.slugify("Survei BI: Harga Rumah Naik 8,43%") == "survei-bi-harga-rumah-naik-8-43"
+
+
+# --- same-story detection -----------------------------------------------------
+
+MANGGARAI = [
+    "Ada 1.500 Orang Mau Beli Rusun Subsidi Manggarai, Kapan Mulai Dijual?",
+    "Belum Resmi Dijual, Rusun Subsidi di Manggarai Sudah Diserbu 1.500 Orang",
+    "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu",
+]
+OTHERS = [
+    "Survei BI: Harga Rumah Naik Tipis, Penjualan Anjlok 8,43 Persen",
+    "Harga Rumah di Australia Anjlok 7 Bulan Beruntun",
+    "Suku Bunga di Inggris Sentuh 4%, Pertama Kali Naik dalam 3 Tahun",
+    "Kondisi Industri Keuangan RI di Tengah Suku Bunga Tinggi",
+]
+TOPIC_WORDS = {"harga", "rumah", "properti", "suku", "bunga", "kpr", "rusun",
+               "subsidi", "hunian", "perumahan", "apartemen", "mbr"}
+
+
+def test_scorer_ranks_retellings_above_same_topic_pairs():
+    titles = MANGGARAI + OTHERS
+    score = t.story_signature_scorer(titles, TOPIC_WORDS)
+    same_story, _ = score(MANGGARAI[0], MANGGARAI[1])
+    diff_country, _ = score(OTHERS[0], OTHERS[1])
+    assert same_story > diff_country
+
+
+def test_topic_words_are_excluded_from_the_score():
+    titles = MANGGARAI + OTHERS
+    score = t.story_signature_scorer(titles, TOPIC_WORDS)
+    value, shared = score(OTHERS[2], OTHERS[3])
+    assert "suku" not in shared and "bunga" not in shared
+
+
+def test_same_story_detected_for_retellings():
+    titles = MANGGARAI + OTHERS
+    score = t.story_signature_scorer(titles, TOPIC_WORDS)
+    same, detail = t.titles_are_same_story(
+        MANGGARAI[0], MANGGARAI[1], 0.62, 1.55, 2, score)
+    assert same
+    assert "manggarai" in detail["shared_specific_words"]
+
+
+def test_different_stories_on_the_same_topic_are_not_same_story():
+    titles = MANGGARAI + OTHERS
+    score = t.story_signature_scorer(titles, TOPIC_WORDS)
+    same, detail = t.titles_are_same_story(
+        OTHERS[0], OTHERS[1], 0.62, 1.55, 2, score)
+    assert not same, detail
+
+
+def test_sequence_signal_alone_can_mark_same_story():
+    same, detail = t.titles_are_same_story(
+        "Rusun MBR di IKN Sedikit Lagi Selesai, Disewakan atau Dijual?",
+        "Rusun MBR di IKN Sedikit Lagi Selesai Disewakan atau Dijual",
+        0.62, 1.55, 2, None)
+    assert same
+    assert detail["sequence_ratio"] >= 0.62
+
+
+def test_no_scorer_means_only_the_wording_signal():
+    same, _ = t.titles_are_same_story(
+        MANGGARAI[0], MANGGARAI[1], 0.62, 1.55, 2, None)
+    assert not same
+
+
+def test_token_overlap_ignores_stopwords():
+    assert t.title_token_overlap("Rumah di Jakarta", "Rumah untuk Jakarta") == 1.0
