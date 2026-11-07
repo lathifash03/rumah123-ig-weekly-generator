@@ -103,9 +103,13 @@ extraction step depends on.
 ## How to run
 
 ```bash
-.venv/bin/python -m pytest -q          # 281 tests, no API key needed
+.venv/bin/python -m pytest -q          # 322 tests, no API key needed
 .venv/bin/python -m src.run            # the pipeline, needs the API key
 .venv/bin/python eval/run_eval.py      # scores run_log.json into eval/results.md
+
+# seeded-error test of the checking layers, needs the API key
+.venv/bin/python eval/seeded_eval.py --repeats 3
+.venv/bin/python eval/seeded_eval.py --render-only   # re-render, no API calls
 ```
 
 `src.run` takes `--max-items`, `--variants` and `--max-retries` to control
@@ -122,10 +126,30 @@ cost. Defaults are 3, 3 and 2.
   failure list, and token usage.
 - `eval/results.md` — first-attempt pass rate against pass rate after retries,
   counts per failure type, and every failing case.
+- `eval/results_run5.md` — the archived run before the hedge, superlative and
+  block rules, kept so the before and after are both visible.
+- `eval/seeded_results.md` and `eval/seeded_run.json` — the seeded-error test
+  and its raw trial data.
 
-## The real run
+Variants carry stable IDs `A`, `B` and `C`, derived from the variant index, so
+the same variant has the same label in the draft heading, the draft front
+matter, the validation results, `run_log.json` and the eval. Numbering only
+the passing variants meant a variant changed label depending on what passed.
 
-From `run_log.json`, run of 2026-11-07, model `gpt-4.1-mini`, 98.8 seconds.
+## The real runs
+
+Two runs are reported, before and after the hedge, superlative and block
+rules were added. Both are real, both are in the repo: run 5 is archived as
+`eval/results_run5.md` and run 6 is `eval/results.md`, generated from the
+`run_log.json` that is committed here.
+
+**Both runs read the same week of news.** The feeds were fetched on
+2026-11-07 and returned the same 555 items, the same 43 relevant and the same
+37 after dedupe. The comparison therefore isolates the effect of the new
+rules, and it is not evidence about how the system behaves on a different
+week. One week is the entire evidence base.
+
+### Funnel, identical in both runs
 
 | Step | Items |
 | --- | --- |
@@ -136,24 +160,86 @@ From `run_log.json`, run of 2026-11-07, model `gpt-4.1-mini`, 98.8 seconds.
 | Drafts written | 3 |
 
 10 of 10 feeds fetched successfully, 0 failed. 512 items rejected as
-irrelevant, 6 dropped as retellings of a story already kept.
+irrelevant, 6 dropped as retellings of a story already kept. Fact extraction
+verified 16 facts and dropped 2 whose quote was not found in the fetched text.
 
-Fact extraction verified 16 facts across the three articles and dropped 2
-because the model's quote was not found in the fetched text.
+### Pass rate, before and after
 
-| Measure | Count | Rate |
+| Measure | Run 5 (before) | Run 6 (after) |
 | --- | --- | --- |
-| Variants attempted | 9 | |
-| Passed on the first attempt | 1 | 11% |
-| Passed after retries | 7 | 78% |
-| Never passed | 2 | 22% |
+| Variants attempted | 9 | 9 |
+| Passed on the first attempt | 1 (11%) | 0 (0%) |
+| Passed after retries | 7 (78%) | 6 (67%) |
+| Never passed | 2 (22%) | 3 (33%) |
+| Items with at least one approved caption | 3 of 3 | 3 of 3 |
+| LLM calls | 41 | 45 |
+| Total tokens | 85,223 | 104,018 |
+| Duration | 98.8 s | 133.6 s |
 
-All 3 stories produced at least one approved caption. Retries recovered 6
-variants. The run used 41 LLM calls, 75,480 input and 9,743 output tokens.
+**The pass rate went down.** That is the expected direction: three new rules
+reject things the old pipeline accepted, so the same model clears a higher
+bar less often. The run costs about 22% more tokens for one fewer approved
+caption.
 
-Remaining failure types, all from the grounding checks: `mislabelled_claim` 4,
-`unverifiable_claim` 4, `unsupported_figure` 4, `sentence_coverage` 1,
-`ungrounded_number` 1.
+### What the new rules rejected
+
+| Failure rule | Run 5 | Run 6 | New in run 6 |
+| --- | --- | --- | --- |
+| `unsupported_figure` | 4 | 6 | |
+| `dropped_hedge` | - | 5 | yes |
+| `mislabelled_claim` | 4 | 3 | |
+| `unverifiable_claim` | 4 | 3 | |
+| `unsupported_superlative` | - | 3 | yes |
+| `unsupported_claim` | - | 2 | |
+| `block_too_long` | - | 1 | yes |
+| `missing_source` | - | 1 | |
+| `sentence_coverage` | 1 | - | |
+| `ungrounded_number` | 1 | - | |
+
+The three new rules fired 9 times on things run 5 let through. Concretely,
+run 5 shipped these and run 6 does not:
+
+- `suku bunga KPR tidak berubah` from a fact that says `relatif stabil`
+- `penurunan paling tajam` from a fact that only gives one figure as lower
+  than another
+- `akan mulai dibangun Januari 2027` from a fact that says `ditargetkan`
+- three approved captions that were a single unbroken paragraph of 57, 71 and
+  79 words
+
+Run 6's approved captions keep the hedges instead: `Rusun Manggarai
+direncanakan mulai dibangun Januari 2027` and `Sekitar 57 persen peminatnya`.
+
+Whether 6 well-hedged captions beat 7 with four overstatements among them is
+a judgement, not a number. The pass rate alone says the system got worse.
+
+### Seeded-error test of the claim checker
+
+A separate test, `eval/seeded_results.md`, measures the checking layers
+directly: 10 captions with exactly one planted fault each plus 2 clean
+controls, all built from one set of verified facts taken verbatim from the
+real run. Each case is run 3 times, because the claim checker is not
+deterministic.
+
+| Measure | Result |
+| --- | --- |
+| Seeded errors caught in every repeat | 9 of 10 (90%) |
+| Caught only in some repeats | 1 of 10 (`E07`, wrong attribution, 2 of 3) |
+| Never caught | 0 of 10 |
+| Controls flagged in any repeat | 0 of 2 |
+
+Seven faults are caught deterministically by code. Three are caught by the
+claim checker and nothing else, which is what justifies its cost: a sentence
+merging two facts, a figure credited to the wrong institution, and an
+invented claim.
+
+`E07` is the most useful case in the set and the clearest weakness. No code
+rule can notice that a Bank Indonesia figure has been credited to Badan Pusat
+Statistik, so that check rests entirely on the claim checker, which caught it
+twice out of three. The first two single passes over this set scored 10 of 10
+and then 9 of 10, which is why the harness now repeats and reports per-case
+counts rather than one number.
+
+No prompt was changed in response to the seeded results.
 
 ## Limitations
 
@@ -179,12 +265,38 @@ Remaining failure types, all from the grounding checks: `mislabelled_claim` 4,
 - **Number grounding is strict on purpose and will reject reasonable copy.**
   A caption saying "naik 8 persen" against a verified "8,43 persen" fails, as
   does writing "Rp 294.000.000" for a verified "Rp 294 juta".
+- **The superlative rule catches rhetorical uses too.** It blocks any of
+  `paling, terbesar, tertinggi, terendah, selalu, pasti, tidak berubah,
+  dijamin, semua, seluruh` unless the facts use that same word, including in
+  the question to the reader. It rejected this project's own test fixture for
+  asking "apa langkah pertama yang paling masuk akal?", which is not a factual
+  claim at all. The fixture was changed rather than the rule, because a
+  guarded word list that makes exceptions for sentences that look rhetorical
+  is a judgement call, and judgement calls are what this layer exists to
+  avoid. This is the rule most likely to annoy a copywriter.
+- **The hedge rule matches sentences to facts by shared figures.** That is the
+  only link available to pure code. A sentence that drops a hedge while
+  citing no figure is not caught, and a figure that also appears in an
+  unhedged fact carries no obligation, so a genuine dropped hedge can slip
+  through when two facts share a number.
+- **Wrong attribution is the least reliable check.** Crediting a Bank
+  Indonesia figure to BPS is invisible to every code rule, so it depends
+  entirely on the claim checker, which caught it in 2 of 3 repeats on the
+  seeded set. Treat attribution as something a human must verify.
+- **The claim checker is not deterministic.** The same caption and the same
+  facts can pass one minute and fail the next. Two single passes over the
+  seeded set scored 10 of 10 and 9 of 10. Any single-run pass rate in this
+  README is one sample, not a measurement.
 - **No auto-posting, by design.** Output is a draft needing human approval.
   There is no Instagram integration and no plan for one.
 - **No engagement data.** Nothing here knows which captions perform. The
   "best" variant is the one that passes the checks, not the one that works.
-- **One week of evidence.** Every number above is a single run. The 78% pass
-  rate is not a stable estimate.
+- **One week of evidence, and the same week every time.** Every pipeline run
+  reported here read the news of 2026-11-07 and saw the same 555 items. The
+  before and after comparison isolates the rules, but nothing here shows how
+  the system behaves on a quiet week, a week dominated by one story, or a week
+  where the property desks publish nothing with a number in it. The 67% pass
+  rate is one sample from one week.
 
 ## What went wrong
 
@@ -230,6 +342,22 @@ running the thing, not by reading the code.
   as the number one million.
 - A live API key was pasted into the tracked `.env.example`. It never reached
   a commit; `test_env_example_has_no_filled_in_key` caught it.
+- Run 5 shipped four overstatements that no rule existed to catch: `tidak
+  berubah` for a verified `relatif stabil`, `paling tajam` for a plain figure,
+  `akan mulai Januari 2027` for a verified `ditargetkan`, and three approved
+  captions that were a single paragraph of 57, 71 and 79 words. The three
+  rules added after run 5 reject all of them, and the pass rate fell from 78%
+  to 67% as a result.
+- The superlative rule immediately rejected this project's own test fixture,
+  which asked "apa langkah pertama yang paling masuk akal?". The rule was
+  kept and the fixture changed.
+- Two seeded-error passes scored 10 of 10 and then 9 of 10 on identical
+  inputs. Reporting either would have reported luck, which is why that harness
+  repeats each case.
+- Two seeded cases were written with an accidental second fault, both an
+  unintended `paling` in the closing question, which the code rule flagged
+  before any API call. The fixtures were corrected so each case carries one
+  planted fault.
 
 ## GitHub Actions status
 
@@ -256,8 +384,19 @@ comes from.
 - Cluster stories before ranking instead of deduping pairwise. The real unit is
   "the Manggarai story", not a headline, and a greedy pairwise pass cannot see
   that.
-- Raise the first-attempt pass rate, currently 11%. Nearly every variant needs
-  at least one retry, which triples the cost of a run for no editorial gain.
+- Raise the first-attempt pass rate, now 0 of 9. Every variant needs at least
+  one retry, which multiplies the cost of a run for no editorial gain. The
+  generator is being asked to satisfy twelve rules at once from a prompt; some
+  of them would be better applied as a deterministic repair, the way the
+  hashtag line already is.
+- Give the hedge rule something better than shared figures to match sentences
+  to facts. Matching on numbers is what pure code can do, but it misses a
+  hedge dropped from a sentence that cites no number.
+- Grow the seeded set and have someone else write the cases. Ten cases written
+  by the author of the rules measure whether the known guards fire, not
+  whether the system is hard to fool.
+- Run the pipeline across several different weeks before quoting any pass rate
+  as a property of the system.
 - Track which approved drafts a human actually posts, and feed that back. Right
   now the system optimises for passing its own checks, which is not the goal.
 - Run the workflow and report its real status here.

@@ -5,6 +5,7 @@ source_url: "https://www.cnnindonesia.com/ekonomi/20261106134338-78-1424115/surv
 published: "2026-11-06T08:29:02+00:00"
 variants_passing: 2
 variants_attempted: 3
+variants_passing_ids: "B, C"
 ---
 
 # Survei BI: Harga Rumah Naik Tipis, Penjualan Anjlok 8,43 Persen
@@ -13,78 +14,92 @@ variants_attempted: 3
 
 ## Caption variants
 
-### Variant 1
+### Variant B
 
-*Passed validation and the claim check on attempt 2 after 1 retry(ies).*
+*Passed validation and the claim check on attempt 3 after 2 retry(ies).*
 
 ```
-Pernah coba bandingkan jumlah rumah yang terjual setiap bulan? Penjualan hunian menurun 8,43 persen pada kuartal III 2026, menurut CNN Indonesia.
-Penurunan paling tajam terjadi pada rumah tipe besar yang turun 10,78 persen.
-Harga properti residensial di pasar primer naik 0,58 persen.
-Kamu bisa santai lihat-lihat pilihan rumah di Rumah123.
-Bagaimana kamu melihat peluang beli rumah sekarang?
+Pernah merasa cicilan rumah itu sulit dicapai? Kamu tidak sendiri.
+
+Menurut CNN Indonesia, harga rumah di pasar primer naik tipis 0,58 persen per tahun pada kuartal III 2026. Tapi, penjualan hunian justru turun 8,43 persen.
+
+Suku bunga KPR tercatat relatif stabil di level 7,47 persen, dan mayoritas pembelian rumah dilakukan lewat KPR.
+
+Coba lihat-lihat di Rumah123 untuk tahu pilihanmu.
+
+Bagaimana menurut kamu kondisi pasar rumah saat ini?
 
 #Rumah123 #HargaRumah
 ```
 
 **Image text suggestion:** Harga properti naik 0,58 persen kuartal III 2026
 
-### Variant 2
+### Variant C
 
-*Passed validation and the claim check on attempt 1.*
+*Passed validation and the claim check on attempt 3 after 2 retry(ies).*
 
 ```
-Kadang kamu merasa proses punya rumah itu lambat dan rumit. Itu hal yang biasa.
+Kadang kamu merasa kemauan punya rumah nggak seiring sama keadaan ya?
 
-Menurut CNN Indonesia, harga rumah di pasar primer naik 0,58 persen pada kuartal III 2026 dibanding tahun lalu. Tapi penjualan hunian turun 8,43 persen di periode yang sama.
+Menurut CNN Indonesia, harga rumah di pasar primer naik tipis 0,58 persen pada kuartal III 2026 dibanding tahun lalu.
 
-Suku bunga KPR tidak berubah, tetap di 7,47 persen. Nilai KPR justru meningkat 4,80 persen secara tahunan.
+Penjualan hunian turun 8,43 persen pada kuartal III 2026 dibanding tahun sebelumnya.
 
-Santai saja, kamu bisa mulai melihat-lihat dengan tenang di Rumah123.
+Mayoritas pembeli masih pakai KPR dengan pangsa 70,68 persen.
 
-Menurut kamu, apa yang paling menantang saat memulai cari rumah?
+Kamu bisa santai jelajahi pilihan di Rumah123 tanpa tekanan.
+
+Menurut kamu, apa yang bikin proses beli rumah terasa berat?
 
 #Rumah123 #HargaRumah
 ```
 
-**Image text suggestion:** Harga properti naik 0,58 persen kuartal III 2026
+**Image text suggestion:** Harga Rumah Naik Tipis Penjualan Turun
 
 ## Verified facts
 
 1. **Harga properti residensial di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan.**
    - supporting quote: "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy)."
 
-2. **Penjualan hunian anjlok 8,43 persen pada kuartal III 2026 secara tahunan.**
+2. **Penjualan hunian turun 8,43 persen pada kuartal III 2026 dibandingkan tahun sebelumnya.**
    - supporting quote: "penjualan hunian justru anjlok 8,43 persen pada kuartal III 2026 dibandingkan periode yang sama tahun lalu."
 
-3. **Penjualan rumah tipe besar menurun 10,78 persen pada kuartal III 2026 secara tahunan.**
-   - supporting quote: "Penjualan rumah tipe besar merosot 10,78 persen."
-
-4. **Suku bunga KPR stabil di level 7,47 persen pada kuartal III 2026.**
+3. **Suku bunga Kredit Pemilikan Rumah (KPR) stabil di level 7,47 persen pada kuartal III 2026.**
    - supporting quote: "suku bunga KPR tercatat relatif stabil di level 7,47 persen pada kuartal III 2026."
 
-5. **Nilai KPR tumbuh 4,80 persen secara tahunan pada kuartal III 2026.**
-   - supporting quote: "nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
+4. **Mayoritas pembelian rumah di pasar primer dilakukan melalui skema KPR dengan pangsa 70,68 persen.**
+   - supporting quote: "mayoritas pembelian rumah di pasar primer dilakukan melalui skema KPR dengan pangsa 70,68 persen."
 
-*1 extracted fact(s) were dropped because the supporting quote was not found in the fetched article text.*
+5. **Penjualan rumah tipe besar merosot 10,78 persen secara tahunan pada kuartal III 2026.**
+   - supporting quote: "Penjualan rumah tipe besar merosot 10,78 persen."
+
+6. **Nilai KPR secara tahunan tumbuh 4,80 persen pada kuartal III 2026.**
+   - supporting quote: "nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
 
 ## Validation results
 
-- **Variant 1: FAILED** (3 attempt(s))
+- **Variant A: FAILED** (3 attempt(s))
   - attempt 1: 1 failure(s)
-    - [sentence_coverage] The claim check did not cover the whole caption (part of the caption was never returned), so part of it was never checked. Treating the caption as unverified.
-  - attempt 2: 2 failure(s)
-    - [mislabelled_claim] Sentence "Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun." was labelled non-factual but it asserts change ['naik', 'turun']. It is a factual claim and must be supported by the verified facts, or removed.
-    - [unverifiable_claim] Claim "Namun, penjualan hunian turun 8,43 persen, terutama penjualan rumah tipe besar yang turun 10,78 persen." was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.
-  - attempt 3: 1 failure(s)
-    - [mislabelled_claim] Sentence "Kadang kamu melihat harga rumah naik pelan sementara masih menabung." was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.
-- **Variant 2: passed** (2 attempt(s))
+    - [dropped_hedge] Sentence "Meski begitu, suku bunga KPR tetap stabil di 7,47 persen." states ['7,47'] as fact, but the verified fact hedges it with "relatif". Keep the hedge, for example with "ditargetkan", "direncanakan" or "sekitar".
+  - attempt 2: 1 failure(s)
+    - [mislabelled_claim] Sentence "Pernah merasa harga rumah terus naik sementara kamu masih menabung?" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.
+  - attempt 3: 2 failure(s)
+    - [mislabelled_claim] Sentence "Kadang kamu lihat harga rumah naik pelan-pelan, tapi masih merasa jauh dari siap." was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.
+    - [unverifiable_claim] Claim "Penjualan rumah turun 8,43 persen, sementara suku bunga KPR relatif stabil di 7,47 persen." was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.
+- **Variant B: passed** (3 attempt(s))
+  - attempt 1: 1 failure(s)
+    - [dropped_hedge] Sentence "Suku bunga KPR stabil di 7,47 persen, dan 70,68 persen pembelian rumah menggunakan KPR." states ['7,47'] as fact, but the verified fact hedges it with "relatif". Keep the hedge, for example with "ditargetkan", "direncanakan" or "sekitar".
+  - attempt 2: 1 failure(s)
+    - [unsupported_figure] Claim "Suku bunga KPR tercatat relatif stabil di sekitar 7,47 persen, dan 70,68 persen pembelian rumah menggunakan KPR." cites figures ['70,68'] that do not appear in its own supporting quote. Use only figures the quote states.
+  - attempt 3: passed
+- **Variant C: passed** (3 attempt(s))
   - attempt 1: 2 failure(s)
-    - [unverifiable_claim] Claim "Harga rumah di pasar primer naik tipis 0,58 persen tahun ini, tapi penjualan rumah justru turun sampai 8,43 persen, lapor CNN Indonesia." was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.
-    - [unverifiable_claim] Claim "Meski begitu, suku bunga KPR stabil di angka 7,47 persen dan nilai KPR justru tumbuh 4,80 persen." was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.
-  - attempt 2: passed
-- **Variant 3: passed** (1 attempt(s))
-  - attempt 1: passed
+    - [dropped_hedge] Sentence "Mayoritas pembeli masih pakai KPR, bunganya stabil di 7,47 persen, dan nilai KPR tumbuh 4,80 persen." states ['7,47'] as fact, but the verified fact hedges it with "relatif". Keep the hedge, for example with "ditargetkan", "direncanakan" or "sekitar".
+    - [block_too_long] block 2 has 49 words. Keep every block to 45 words or fewer by splitting it with a blank line.
+  - attempt 2: 2 failure(s)
+    - [unverifiable_claim] Claim "Penjualan rumah turun 8,43 persen, termasuk untuk rumah tipe besar yang turun 10,78 persen." was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.
+    - [unverifiable_claim] Claim "Bunganya relatif stabil di sekitar 7,47 persen, dan nilai KPR tumbuh 4,80 persen." was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.
+  - attempt 3: passed
 
 ## Source
 
