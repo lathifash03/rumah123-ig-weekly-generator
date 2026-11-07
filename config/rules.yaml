@@ -61,6 +61,13 @@ caption:
   hashtag_count: 2
   required_hashtag: "#Rumah123"
   max_emoji: 1
+
+  # Digits inside these tokens are part of a name, not a factual claim, so they
+  # are removed before number grounding. Without this, the "123" in the brand
+  # name Rumah123 is reported as an ungrounded number.
+  brand_tokens:
+    - "Rumah123"
+
   forbidden_characters:
     em_dash: "—"
     en_dash_as_separator: "–"
