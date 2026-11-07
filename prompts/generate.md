@@ -80,7 +80,15 @@ detikProperti".
 
 ## Structure
 
-Plain text. A blank line between blocks.
+Plain text, written in SHORT BLOCKS separated by a blank line. Not one
+paragraph. A blank line is two newlines, not one.
+
+- At least 2 blocks, and 4 or 5 reads better.
+- No block longer than 45 words. Split it with a blank line instead.
+
+This is checked by code. Three of the seven accepted captions in an earlier
+run were a single unbroken paragraph of 57, 71 and 79 words, which reads as a
+wall of text on Instagram.
 
 1. A relatable hook. One or two short lines. Something the reader has felt.
 2. One to three short points explaining the news and what it means for them.
@@ -107,6 +115,15 @@ is added after you, from the topic_hashtag you choose.
   ketinggalan", no "dijamin", no "gratis", no "termurah", no "cuan".
 - Do not promise anything. Do not give financial advice. Do not tell the
   reader to buy.
+- Do not use a superlative, an absolute or a certainty word unless the facts
+  use that same word. No "paling", "terbesar", "tertinggi", "terendah",
+  "selalu", "pasti", "tidak berubah", "dijamin", "semua", "seluruh". Saying
+  one figure is larger than another is not the same as calling it the largest,
+  and this applies to your question to the reader as well as to the facts.
+- Keep a hedge that the facts keep. If a fact says "ditargetkan mulai Januari
+  2027" then the building is a target, not a date, so write "ditargetkan" or
+  "direncanakan" rather than "akan mulai". The same holds for "relatif",
+  "sekitar", "diperkirakan" and "estimasi".
 
 ## Image text
 

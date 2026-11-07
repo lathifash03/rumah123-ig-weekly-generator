@@ -105,6 +105,7 @@ def main(argv: list[str] | None = None) -> int:
         record["variants"] = [
             {
                 "variant_index": r.variant_index,
+                "variant_id": r.variant_id,
                 "passed": r.passed,
                 "first_attempt_passed": r.first_attempt_passed,
                 "attempts": r.attempts,

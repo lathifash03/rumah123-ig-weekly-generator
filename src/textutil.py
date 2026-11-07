@@ -632,3 +632,33 @@ def coverage_key(text: str) -> str:
     any skipped, reordered or invented word still changes the key.
     """
     return re.sub(r"[^0-9a-z]+", "", strip_hashtags(text or "").lower())
+
+
+# --- sentence splitting -------------------------------------------------------
+
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def split_sentences(text: str) -> list[str]:
+    """Split a caption into sentences, deterministically.
+
+    Splits on a blank line, a single newline and sentence-ending punctuation.
+    Used by the hedge rule to decide which sentence carries which figure, so
+    it has to be code rather than something the model reports.
+    """
+    out: list[str] = []
+    for line in (text or "").replace("\r", "").split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        for part in _SENTENCE_END.split(line):
+            part = part.strip()
+            if part:
+                out.append(part)
+    return out
+
+
+def split_blocks(text: str) -> list[str]:
+    """Blank-line separated blocks of a caption."""
+    return [b.strip() for b in re.split(r"\n\s*\n", (text or "").strip())
+            if b.strip()]

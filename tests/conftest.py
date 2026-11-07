@@ -52,7 +52,7 @@ Artinya biaya pinjaman belum berubah, jadi kamu punya waktu untuk berhitung.
 
 Di Rumah123 kamu bisa lihat-lihat dulu tanpa perlu buru.
 
-Menurut kamu, apa langkah pertama yang paling masuk akal?
+Menurut kamu, apa langkah pertama yang masuk akal?
 
 #Rumah123 #KPR"""
 

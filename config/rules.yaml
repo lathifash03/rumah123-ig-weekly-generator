@@ -105,6 +105,59 @@ caption:
     en_dash_as_separator: "–"
     semicolon: ";"
 
+  # Short blocks separated by blank lines. Measured on run 5: the captions
+  # that were actually structured had blocks of 5 to 41 words, while three of
+  # the seven passing captions were a single wall of 57, 71 and 79 words. The
+  # limit sits above the structured maximum and below the walls of text.
+  blocks:
+    min_blocks: 2
+    max_words_per_block: 45
+
+  # Superlatives, absolutes and certainty words. The caption may only use one
+  # if the verified facts or their quotes use it too. The model reaches for
+  # these when paraphrasing: run 5 produced "penurunan paling tajam" from a
+  # fact that only said one figure was larger than another, and "suku bunga
+  # tidak berubah" from a fact that said "relatif stabil".
+  guarded_words:
+    - paling
+    - terbesar
+    - tertinggi
+    - terendah
+    - selalu
+    - pasti
+    - tidak berubah
+    - dijamin
+    - semua
+    - seluruh
+
+  # A fact whose quote hedges must stay hedged in the caption. "Ditargetkan
+  # mulai Januari 2027" is a target, not a date, and run 5 turned it into
+  # "akan mulai dibangun Januari 2027".
+  hedges:
+    # Hedges that, when found in a fact's quote, oblige the caption to hedge.
+    in_facts:
+      - ditargetkan
+      - direncanakan
+      - relatif
+      - sekitar
+      - diperkirakan
+      - estimasi
+    # Hedges the caption may use to satisfy that obligation.
+    allowed_in_caption:
+      - ditargetkan
+      - direncanakan
+      - rencananya
+      - rencana
+      - target
+      - relatif
+      - sekitar
+      - kurang lebih
+      - kira-kira
+      - diperkirakan
+      - perkiraan
+      - estimasi
+      - berpotensi
+
   # Hard-selling / hype language that breaks the brand voice.
   banned_phrases:
     - "buruan"

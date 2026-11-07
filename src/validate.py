@@ -14,10 +14,14 @@ from dataclasses import dataclass
 from .config import rules
 from .models import Fact
 from .textutil import (
+    NUMBER_RE,
     count_emoji,
     hashtags,
     keyword_matches,
     normalize_ws,
+    split_blocks,
+    split_sentences,
+    strip_hashtags,
     ungrounded_number_words,
     ungrounded_numbers,
     word_count_excluding_hashtags,
@@ -160,6 +164,124 @@ def validate(caption: str, facts: list[Fact], source_display: str) -> list[Failu
             f"facts state, written the way the facts write them.",
         ))
 
+    # 10. superlatives, absolutes and certainty words need support
+    failures.extend(_check_guarded_words(text, blob, cfg))
+
+    # 11. a hedged fact must stay hedged
+    failures.extend(_check_hedges(text, facts, cfg))
+
+    # 12. short blocks separated by blank lines
+    failures.extend(_check_blocks(text, cfg))
+
+    return failures
+
+
+def _check_guarded_words(text: str, blob: str, cfg: dict) -> list[Failure]:
+    """A superlative or absolute is a claim, so the facts must make it.
+
+    "Paling tajam" asserts a ranking. "Tidak berubah" asserts certainty. The
+    model reaches for both when paraphrasing, which is why this is checked
+    rather than asked for in a prompt.
+    """
+    guarded = cfg.get("guarded_words", [])
+    used = keyword_matches(text, guarded)
+    supported = set(keyword_matches(blob, guarded))
+    unsupported = [w for w in used if w not in supported]
+    if not unsupported:
+        return []
+    return [Failure(
+        "unsupported_superlative",
+        f"These superlative or absolute words are not used by the verified "
+        f"facts: {unsupported}. The facts do not establish a ranking or a "
+        f"certainty, so remove the word or restate it as the facts do.",
+    )]
+
+
+def _check_hedges(text: str, facts: list[Fact], cfg: dict) -> list[Failure]:
+    """A figure the facts only state as a target must not become a statement.
+
+    For each hedged fact, the figures it carries are collected. A caption
+    sentence citing such a figure has to hedge too. A figure that also appears
+    in an unhedged fact is left alone, because the sentence may legitimately be
+    drawing on that one instead.
+    """
+    hedge_cfg = cfg.get("hedges", {})
+    fact_hedges = hedge_cfg.get("in_facts", [])
+    caption_hedges = hedge_cfg.get("allowed_in_caption", [])
+    if not fact_hedges or not facts:
+        return []
+
+    hedged_figures: dict[str, str] = {}   # figure -> the hedge word used
+    unhedged_figures: set[str] = set()
+    for fact in facts:
+        fact_text = f"{fact.claim} {fact.quote}"
+        found = keyword_matches(fact_text, fact_hedges)
+        figures = set(NUMBER_RE.findall(normalize_ws(fact.quote)))
+        if found:
+            for fig in figures:
+                hedged_figures.setdefault(fig, found[0])
+        else:
+            unhedged_figures |= figures
+
+    # a figure available from an unhedged fact carries no obligation
+    obliged = {f: h for f, h in hedged_figures.items()
+               if f not in unhedged_figures}
+    if not obliged:
+        return []
+
+    failures: list[Failure] = []
+    for sentence in split_sentences(strip_hashtags(text)):
+        figures = set(NUMBER_RE.findall(sentence))
+        hit = sorted(figures & set(obliged))
+        if not hit:
+            continue
+        if keyword_matches(sentence, caption_hedges):
+            continue
+        hedge_word = obliged[hit[0]]
+        failures.append(Failure(
+            "dropped_hedge",
+            f'Sentence "{sentence}" states {hit} as fact, but the verified '
+            f'fact hedges it with "{hedge_word}". Keep the hedge, for example '
+            f'with "ditargetkan", "direncanakan" or "sekitar".',
+        ))
+    return failures
+
+
+def _check_blocks(text: str, cfg: dict) -> list[Failure]:
+    """Short blocks separated by blank lines.
+
+    Measured on run 5: three of the seven passing captions were a single
+    unbroken paragraph of 57, 71 and 79 words, which reads as a wall of text
+    on Instagram.
+    """
+    block_cfg = cfg.get("blocks") or {}
+    min_blocks = block_cfg.get("min_blocks", 0)
+    max_words = block_cfg.get("max_words_per_block", 0)
+    if not min_blocks and not max_words:
+        return []
+
+    body = strip_hashtags(text).strip()
+    blocks = split_blocks(body)
+    failures: list[Failure] = []
+
+    if min_blocks and len(blocks) < min_blocks:
+        failures.append(Failure(
+            "block_structure",
+            f"The caption is {len(blocks)} block(s) of text. It needs at "
+            f"least {min_blocks}, separated by a blank line, so it does not "
+            f"read as a wall of text.",
+        ))
+
+    if max_words:
+        long_blocks = [(i + 1, len(b.split())) for i, b in enumerate(blocks)
+                       if len(b.split()) > max_words]
+        if long_blocks:
+            detail = ", ".join(f"block {n} has {w} words" for n, w in long_blocks)
+            failures.append(Failure(
+                "block_too_long",
+                f"{detail}. Keep every block to {max_words} words or fewer by "
+                f"splitting it with a blank line.",
+            ))
     return failures
 
 

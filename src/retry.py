@@ -14,12 +14,26 @@ from .validate import Failure, format_failures, validate
 MAX_RETRIES = 2
 
 
+def variant_id(index: int) -> str:
+    """Stable label for a variant: A, B, C...
+
+    The index is the identity, so the same variant carries the same label in
+    the draft, the run log and the eval. Numbering only the passing variants
+    1, 2, 3 made the labels shift depending on what passed.
+    """
+    return chr(ord("A") + index) if 0 <= index < 26 else f"V{index}"
+
+
 @dataclass
 class VariantResult:
     variant_index: int
     passed: bool
     caption: Caption | None
     attempts: list[dict] = field(default_factory=list)
+
+    @property
+    def variant_id(self) -> str:
+        return variant_id(self.variant_index)
 
     @property
     def first_attempt_passed(self) -> bool:

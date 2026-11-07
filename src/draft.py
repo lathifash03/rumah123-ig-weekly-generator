@@ -42,6 +42,7 @@ def write_draft(
         f'published: "{item.published}"',
         f"variants_passing: {len(passing)}",
         f"variants_attempted: {len(variant_results)}",
+        f'variants_passing_ids: "{", ".join(r.variant_id for r in passing) or "none"}"',
         "---",
         "",
         f"# {item.title}",
@@ -53,12 +54,12 @@ def write_draft(
     if passing:
         lines.append("## Caption variants")
         lines.append("")
-        for n, result in enumerate(passing, 1):
+        for result in passing:
             caption = result.caption
             attempts = len(result.attempts)
             retried = "" if attempts == 1 else f" after {attempts - 1} retry(ies)"
             lines += [
-                f"### Variant {n}",
+                f"### Variant {result.variant_id}",
                 "",
                 f"*Passed validation and the claim check on attempt "
                 f"{attempts}{retried}.*",
@@ -94,7 +95,7 @@ def write_draft(
     lines += ["## Validation results", ""]
     for result in variant_results:
         verdict = "passed" if result.passed else "FAILED"
-        lines.append(f"- **Variant {result.variant_index + 1}: {verdict}** "
+        lines.append(f"- **Variant {result.variant_id}: {verdict}** "
                      f"({len(result.attempts)} attempt(s))")
         for attempt in result.attempts:
             failures = attempt.get("failures") or []

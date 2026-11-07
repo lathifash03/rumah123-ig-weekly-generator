@@ -42,7 +42,7 @@ def _sentences_for(caption, supported=True):
          "factual": False, "supported": False, "quote": ""},
         {"text": "Di Rumah123 kamu bisa lihat-lihat dulu tanpa perlu buru.",
          "factual": False, "supported": False, "quote": ""},
-        {"text": "Menurut kamu, apa langkah pertama yang paling masuk akal?",
+        {"text": "Menurut kamu, apa langkah pertama yang masuk akal?",
          "factual": False, "supported": False, "quote": ""},
     ]}
 

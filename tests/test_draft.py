@@ -64,9 +64,23 @@ def test_draft_lists_every_passing_variant(vitem, tmp_path):
     results = [passing_result(0, "satu"), passing_result(1, "dua"),
                passing_result(2, "tiga")]
     text = write_draft(vitem, results, 1, now=NOW, draft_dir=tmp_path).read_text()
-    for needle in ["Variant 1", "Variant 2", "Variant 3", "satu", "dua", "tiga"]:
+    for needle in ["Variant A", "Variant B", "Variant C", "satu", "dua", "tiga"]:
         assert needle in text
     assert "variants_passing: 3" in text
+    assert 'variants_passing_ids: "A, B, C"' in text
+
+
+def test_variant_ids_are_stable_when_only_some_pass(vitem, tmp_path):
+    """Variant C must still be called C when A and B failed, so the label
+    means the same thing in the draft, the run log and the eval."""
+    results = [failing_result(0), failing_result(1), passing_result(2, "tiga")]
+    text = write_draft(vitem, results, 1, now=NOW, draft_dir=tmp_path).read_text()
+    assert "### Variant C" in text
+    assert "### Variant A" not in text
+    assert 'variants_passing_ids: "C"' in text
+    assert "**Variant A: FAILED**" in text
+    assert "**Variant B: FAILED**" in text
+    assert "**Variant C: passed**" in text
 
 
 def test_draft_reports_failures_honestly(vitem, tmp_path):
@@ -90,4 +104,4 @@ def test_draft_mixed_pass_and_fail(vitem, tmp_path):
     text = write_draft(vitem, results, 1, now=NOW, draft_dir=tmp_path).read_text()
     assert "variants_passing: 1" in text
     assert "variants_attempted: 2" in text
-    assert "Variant 2: FAILED" in text
+    assert "Variant B: FAILED" in text

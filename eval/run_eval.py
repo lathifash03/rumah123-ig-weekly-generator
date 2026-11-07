@@ -27,11 +27,14 @@ def collect(log: dict) -> dict:
     variants = []
     for item in log.get("items", []):
         for variant in item.get("variants", []) or []:
+            index = variant.get("variant_index")
             variants.append({
                 "item_title": item.get("title", ""),
                 "item_url": item.get("url", ""),
                 "source": item.get("source", ""),
-                "variant_index": variant.get("variant_index"),
+                "variant_index": index,
+                "variant_id": variant.get("variant_id")
+                or (chr(ord("A") + index) if isinstance(index, int) else "?"),
                 "passed": bool(variant.get("passed")),
                 "first_attempt_passed": bool(variant.get("first_attempt_passed")),
                 "attempts": variant.get("attempts", []),
@@ -158,11 +161,12 @@ def render(log: dict, stats: dict) -> str:
     else:
         for variant in stats["failing"]:
             lines += [
-                f"### {variant['item_title'][:80]}",
+                f"### Variant {variant['variant_id']} - "
+                f"{variant['item_title'][:70]}",
                 "",
                 f"- Source: {variant['source']}",
                 f"- URL: {variant['item_url']}",
-                f"- Variant index: {variant['variant_index']}",
+                f"- Variant: {variant['variant_id']}",
                 f"- Attempts: {len(variant['attempts'])}",
                 "- Failures on the final attempt:",
             ]
