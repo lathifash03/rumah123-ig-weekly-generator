@@ -19,6 +19,14 @@ the run.
 
 ## Architecture
 
+The diagram below is the short version. [`docs/architecture.md`](docs/architecture.md)
+has the full one: a pipeline flowchart marking which steps are code and which
+are LLM calls, a sequence diagram of one item through the retry loop including
+what is sent back on a failure, the data contracts taken from `src/models.py`,
+a table of where each kind of error is caught, and what nothing catches.
+Rendered as [`docs/architecture.svg`](docs/architecture.svg) and
+[`docs/retry-loop.svg`](docs/retry-loop.svg).
+
 ```mermaid
 flowchart TD
     A[config/sources.yaml<br/>10 verified RSS feeds] --> B[ingest.py<br/>keep last 7 days]
