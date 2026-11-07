@@ -14,13 +14,36 @@ GOOD = {"caption": PASSING_CAPTION, "image_text": "Harga rumah naik 8,43 persen"
 BAD = {"caption": "Buruan beli — naik 99 persen #Rumah123 #Rumah123",
        "image_text": "x"}
 
-CC_OK = {"claims": [
-    {"claim": "harga rumah naik 8,43 persen", "supported": True,
-     "quote": "harga rumah naik 8,43 persen pada kuartal III 2026"},
-]}
-CC_BAD = {"claims": [
-    {"claim": "rumah akan murah tahun depan", "supported": False, "quote": ""},
-]}
+FACT_QUOTE = "harga rumah naik 8,43 persen pada kuartal III 2026"
+RATE_QUOTE = "Bank Indonesia menahan suku bunga acuan di 5,25 persen"
+
+
+def _sentences_for(caption, supported=True):
+    """Claim-check v2 response covering every sentence of PASSING_CAPTION.
+
+    v2 requires the returned sentences to reproduce the caption, so the stub
+    has to cover it rather than return one hand-picked claim.
+    """
+    return {"sentences": [
+        {"text": "Pernah merasa harga rumah bergerak lebih cepat dari tabungan kamu?",
+         "factual": False, "supported": False, "quote": ""},
+        {"text": "Menurut CNN Indonesia, harga rumah naik 8,43 persen pada kuartal III.",
+         "factual": True, "supported": supported,
+         "quote": FACT_QUOTE if supported else ""},
+        {"text": "Bank Indonesia menahan suku bunga acuan di 5,25 persen.",
+         "factual": True, "supported": supported,
+         "quote": RATE_QUOTE if supported else ""},
+        {"text": "Artinya biaya pinjaman belum berubah, jadi kamu punya waktu untuk berhitung.",
+         "factual": False, "supported": False, "quote": ""},
+        {"text": "Di Rumah123 kamu bisa lihat-lihat dulu tanpa perlu buru.",
+         "factual": False, "supported": False, "quote": ""},
+        {"text": "Menurut kamu, apa langkah pertama yang paling masuk akal?",
+         "factual": False, "supported": False, "quote": ""},
+    ]}
+
+
+CC_OK = _sentences_for(PASSING_CAPTION, supported=True)
+CC_BAD = _sentences_for(PASSING_CAPTION, supported=False)
 
 
 def test_first_attempt_pass_uses_one_generate_and_one_claimcheck(vitem):

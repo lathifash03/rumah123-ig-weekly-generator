@@ -1,6 +1,8 @@
 """Relevance filtering and dedupe. Pure code."""
+from src.config import rules
 from src.filter import dedupe, normalize_url, relevant
 from src.models import Item
+from src.textutil import title_similarity
 
 
 def mk(title, url, summary=""):
@@ -192,3 +194,77 @@ def test_dedupe_records_what_it_was_a_duplicate_of():
     items = [mk("Judul A", "https://a.co/x"), mk("Judul A", "https://a.co/y")]
     kept, dropped = dedupe(items)
     assert dropped[0]["duplicate_of"] == "https://a.co/x"
+
+
+# --- regression: the dedupe rule that never fired (commit c6b9d36) -----------
+# The original rule required a character-sequence ratio of 0.82 between two
+# titles. Measured on the 43 real candidates of 2026-11-07, genuine retellings
+# of one story reached only about 0.64, so the rule could not fire at all and
+# the dedupe step dropped zero items while nine headlines about one subsidised
+# apartment project all reached the ranker.
+
+# Verbatim headlines from that fetch. Nine articles covered this one project.
+REAL_RETELLINGS = [
+    "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+    "Diperebutkan 1.500 Orang, Rusun Subsidi Manggarai Dibanderol Rp 294 Juta",
+    "Ada 1.500 Orang Mau Beli Rusun Subsidi Manggarai, Kapan Mulai Dijual?",
+    "Belum Resmi Dijual, Rusun Subsidi di Manggarai Sudah Diserbu 1.500 Orang",
+]
+
+
+def test_regression_dedupe_actually_fires_on_real_retellings():
+    """The whole point of commit c6b9d36: this must drop something."""
+    items = with_distractors(*REAL_RETELLINGS)
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) < len(REAL_RETELLINGS), (
+        "dedupe dropped nothing, which is the exact bug commit c6b9d36 fixed"
+    )
+    assert any(d["reason"] == "same_story" for d in dropped)
+
+
+def test_regression_sequence_threshold_is_reachable_in_practice():
+    """Guards the root cause rather than the symptom.
+
+    A sequence threshold above about 0.7 is unreachable by real retellings, so
+    a value that high silently disables the signal.
+    """
+    threshold = rules()["dedupe"]["title_sequence_threshold"]
+    best = max(
+        title_similarity(a, b)
+        for i, a in enumerate(REAL_RETELLINGS)
+        for b in REAL_RETELLINGS[i + 1:]
+    )
+    assert best < 0.82, (
+        "real retellings now exceed the old 0.82 threshold; the premise of "
+        "this regression test should be rechecked"
+    )
+    assert threshold <= 0.7, (
+        f"title_sequence_threshold is {threshold}, which real retellings "
+        f"(best observed {best:.2f}) cannot reach. The signal is disabled."
+    )
+
+
+def test_regression_rarity_signal_fires_where_wording_alone_cannot():
+    """The pair that the sequence ratio alone misses must still be caught."""
+    a, b = REAL_RETELLINGS[0], REAL_RETELLINGS[2]
+    assert title_similarity(a, b) < 0.62, "premise: wording alone is not enough"
+
+    items = with_distractors(a, b)
+    kept, dropped = dedupe(items)
+    under_test = [i.url for i in kept if i.url.startswith("https://a.co/t")]
+    assert len(under_test) == 1, f"kept {under_test}, dropped {dropped}"
+    merge = next(d for d in dropped if d["reason"] == "same_story")
+    assert merge["rarity_score"] >= rules()["dedupe"]["story_rarity_score_threshold"]
+    assert "manggarai" in merge["shared_specific_words"]
+
+
+def test_regression_dropped_records_explain_why():
+    """A dropped item must record which signal fired, so a future change to
+    these thresholds can be audited from run_log.json."""
+    items = with_distractors(*REAL_RETELLINGS)
+    _, dropped = dedupe(items)
+    merge = next(d for d in dropped if d["reason"] == "same_story")
+    for key in ["sequence_ratio", "rarity_score", "shared_specific_words",
+                "duplicate_of", "duplicate_of_title"]:
+        assert key in merge, key

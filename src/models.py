@@ -115,16 +115,17 @@ CLAIMCHECK_SCHEMA = {
     "schema": {
         "type": "object",
         "additionalProperties": False,
-        "required": ["claims"],
+        "required": ["sentences"],
         "properties": {
-            "claims": {
+            "sentences": {
                 "type": "array",
                 "items": {
                     "type": "object",
                     "additionalProperties": False,
-                    "required": ["claim", "supported", "quote"],
+                    "required": ["text", "factual", "supported", "quote"],
                     "properties": {
-                        "claim": {"type": "string"},
+                        "text": {"type": "string"},
+                        "factual": {"type": "boolean"},
                         "supported": {"type": "boolean"},
                         "quote": {"type": "string"},
                     },

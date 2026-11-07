@@ -223,3 +223,150 @@ def test_no_scorer_means_only_the_wording_signal():
 
 def test_token_overlap_ignores_stopwords():
     assert t.title_token_overlap("Rumah di Jakarta", "Rumah untuk Jakarta") == 1.0
+
+
+# --- Indonesian number words --------------------------------------------------
+# A caption can make a numeric claim without writing a digit.
+
+WORD_FACTS = ("harga rumah naik 8,43 persen, tersedia 2 juta unit, "
+              "tenor 12 bulan, suku bunga 5,25 persen")
+
+
+@pytest.mark.parametrize("text,phrase,value", [
+    ("naik delapan persen", "delapan persen", 8.0),
+    ("naik sepuluh persen", "sepuluh persen", 10.0),
+    ("sebelas persen", "sebelas persen", 11.0),
+    ("dua belas bulan", "dua belas bulan", 12.0),
+    ("dua puluh lima persen", "dua puluh lima persen", 25.0),
+    ("dua kali lipat", "dua kali lipat", 2.0),
+    ("dua juta unit", "dua juta unit", 2_000_000.0),
+    ("setengah juta", "setengah juta", 500_000.0),
+    ("delapan koma empat tiga persen", "delapan koma empat tiga persen", 8.43),
+])
+def test_indonesian_number_words_are_parsed(text, phrase, value):
+    claims = t.number_word_claims(text)
+    assert claims, f"nothing detected in {text!r}"
+    assert claims[0][0] == phrase
+    assert claims[0][1] == pytest.approx(value)
+
+
+def test_number_word_without_a_measure_word_is_not_a_quantity():
+    """Regression guard: "salah satu bank" must not be read as the number one,
+    or every caption containing the phrase would fail grounding."""
+    assert t.number_word_claims("salah satu bank terbesar di Indonesia") == []
+
+
+def test_delapan_persen_is_not_grounded_by_a_fact_of_8_43():
+    """A figure written in words is still a rounding."""
+    assert t.ungrounded_number_words("naik delapan persen", WORD_FACTS) == \
+        ["delapan persen"]
+
+
+def test_number_word_matching_a_fact_exactly_is_grounded():
+    assert t.ungrounded_number_words("tenor dua belas bulan", WORD_FACTS) == []
+
+
+def test_number_word_with_scale_matches_a_digit_fact():
+    """The facts write "2 juta unit"; the caption writes "dua juta unit"."""
+    assert t.ungrounded_number_words("tersedia dua juta unit", WORD_FACTS) == []
+
+
+def test_dua_kali_lipat_is_not_grounded_by_an_unrelated_two():
+    """The facts contain "2 juta unit". A doubling claim is a different unit
+    and must not borrow that number."""
+    assert t.ungrounded_number_words("naik dua kali lipat", WORD_FACTS) == \
+        ["dua kali lipat"]
+
+
+def test_unit_class_must_match():
+    """12 appears in the facts as months, so 12 percent is not grounded."""
+    assert t.ungrounded_number_words("naik dua belas persen", WORD_FACTS) == \
+        ["dua belas persen"]
+
+
+def test_number_words_in_the_facts_ground_a_digit_free_caption():
+    facts = "harga naik delapan persen menurut laporan itu"
+    assert t.ungrounded_number_words("naik delapan persen", facts) == []
+
+
+# --- number format variants ---------------------------------------------------
+# The same figure written different ways is the same figure.
+
+VARIANT_FACTS = ("harga rumah naik 8,43 persen, suku bunga 5,25 persen, "
+                 "nilai transaksi Rp 1,2 miliar, indeks 5.050")
+
+
+@pytest.mark.parametrize("caption", [
+    "naik 8,43 persen",
+    "naik 8.43 persen",
+    "naik 8,43%",
+    "suku bunga 5,25%",
+    "suku bunga 5,25 persen",
+    "senilai Rp 1,2 miliar",
+    "senilai Rp1,2 miliar",
+    "indeks 5.050",
+    "indeks 5050",
+])
+def test_format_variants_count_as_grounded(caption):
+    assert t.ungrounded_numbers(caption, VARIANT_FACTS) == [], caption
+
+
+def test_numeric_interpretations_of_a_decimal_comma():
+    assert t._numeric_interpretations("8,43") == {8.43}
+
+
+def test_numeric_interpretations_of_a_dot_give_both_readings():
+    """"5.050" is five thousand and fifty, but a dot is also how a decimal
+    gets mistyped, so both readings are kept."""
+    assert t._numeric_interpretations("5.050") == {5050.0, 5.05}
+
+
+def test_different_figure_is_still_ungrounded_across_formats():
+    assert t.ungrounded_numbers("naik 9,99 persen", VARIANT_FACTS) == ["9,99"]
+
+
+# --- emoji grapheme clusters --------------------------------------------------
+
+ZWJ = "‍"
+VS16 = "️"
+
+
+@pytest.mark.parametrize("name,text,expected", [
+    ("plain pictograph", "\U0001F3E0", 1),
+    ("variation selector 16", "❤" + VS16, 1),
+    ("ZWJ family of three", "\U0001F468" + ZWJ + "\U0001F469" + ZWJ + "\U0001F467", 1),
+    ("ZWJ couple with heart", "\U0001F469" + ZWJ + "❤" + VS16 + ZWJ + "\U0001F468", 1),
+    ("skin tone modifier", "\U0001F44D\U0001F3FD", 1),
+    ("regional indicator flag", "\U0001F1EE\U0001F1E9", 1),
+    ("two flags", "\U0001F1EE\U0001F1E9\U0001F1FA\U0001F1F8", 2),
+    ("combining keycap", "1" + VS16 + "⃣", 1),
+    ("pictograph plus flag", "\U0001F3E0\U0001F1EE\U0001F1E9", 2),
+    ("two distinct pictographs", "\U0001F3E0\U0001F60A", 2),
+    ("no emoji", "tanpa emoji 123 dan %", 0),
+])
+def test_emoji_cluster_counting(name, text, expected):
+    assert t.count_emoji(text) == expected, name
+
+
+def test_flag_is_one_emoji_not_two_codepoints():
+    """Regression: counting raw codepoints reported a flag as two emoji, so a
+    caption with one flag failed the max-one-emoji rule."""
+    assert t.count_emoji("\U0001F1EE\U0001F1E9") == 1
+
+
+# --- coverage key -------------------------------------------------------------
+
+def test_coverage_key_ignores_punctuation_and_spacing():
+    assert t.coverage_key("Halo,  dunia! Ya.") == t.coverage_key("halo dunia ya")
+
+
+def test_coverage_key_ignores_hashtags():
+    assert t.coverage_key("Halo #Rumah123 #KPR") == t.coverage_key("Halo")
+
+
+def test_coverage_key_detects_a_missing_word():
+    assert t.coverage_key("halo dunia ya") != t.coverage_key("halo dunia")
+
+
+def test_coverage_key_keeps_digits():
+    assert t.coverage_key("naik 8,43 persen") == "naik843persen"

@@ -228,3 +228,58 @@ def test_banned_word_as_a_prefix_of_another_word_is_not_flagged(facts):
 def test_gratis_as_its_own_word_is_flagged(facts):
     assert "banned_phrase" in rules_hit(
         "CNN Indonesia biaya gratis untuk kamu #Rumah123 #KPR", facts)
+
+
+# --- en dash ------------------------------------------------------------------
+
+EN_DASH = "–"
+
+
+def test_en_dash_as_a_separator_fails(facts):
+    caption = f"CNN Indonesia teks {EN_DASH} lanjut #Rumah123 #KPR"
+    assert "en_dash" in rules_hit(caption, facts)
+
+
+def test_en_dash_with_space_on_one_side_fails(facts):
+    caption = f"CNN Indonesia teks{EN_DASH} lanjut #Rumah123 #KPR"
+    assert "en_dash" in rules_hit(caption, facts)
+
+
+def test_en_dash_in_a_numeric_range_is_allowed(facts):
+    """A range like 2024-2025 is not a dash used as punctuation."""
+    caption = f"CNN Indonesia periode 2024{EN_DASH}2025 #Rumah123 #KPR"
+    assert "en_dash" not in rules_hit(caption, facts)
+
+
+def test_clean_caption_has_no_en_dash(facts, passing_caption):
+    assert "en_dash" not in rules_hit(passing_caption, facts)
+
+
+# --- figures written as words -------------------------------------------------
+
+def test_number_word_rounding_fails(facts):
+    """The facts say 8,43 percent. "delapan persen" is a rounding."""
+    caption = "CNN Indonesia naik delapan persen #Rumah123 #KPR"
+    assert "ungrounded_number_word" in rules_hit(caption, facts)
+
+
+def test_number_word_matching_the_facts_passes(facts):
+    caption = "CNN Indonesia suku bunga lima koma dua lima persen #Rumah123 #KPR"
+    assert "ungrounded_number_word" not in rules_hit(caption, facts)
+
+
+def test_dua_kali_lipat_without_support_fails(facts):
+    caption = "CNN Indonesia harga naik dua kali lipat #Rumah123 #KPR"
+    assert "ungrounded_number_word" in rules_hit(caption, facts)
+
+
+def test_salah_satu_is_not_treated_as_a_figure(facts):
+    caption = "CNN Indonesia salah satu pilihan untuk kamu #Rumah123 #KPR"
+    assert "ungrounded_number_word" not in rules_hit(caption, facts)
+
+
+def test_number_word_failure_names_the_phrase(facts):
+    caption = "CNN Indonesia naik delapan persen #Rumah123 #KPR"
+    msg = [f.message for f in validate(caption, facts, SOURCE)
+           if f.rule == "ungrounded_number_word"][0]
+    assert "delapan persen" in msg

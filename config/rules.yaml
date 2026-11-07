@@ -132,3 +132,60 @@ caption:
     - "bunga 0%"
     - "tanpa risiko"
     - "sudah pasti"
+
+# Used by src/claimcheck.py to re-classify sentences the model labelled
+# non-factual. The rule fails closed: if any of these appear in a sentence,
+# the sentence is treated as a factual claim and must be supported, whatever
+# the model said about it.
+claimcheck:
+  # Verbs that assert a direction of change. A sentence saying something rose
+  # or fell is making a factual claim even with no number in it.
+  trend_verbs:
+    - naik
+    - turun
+    - tertahan
+    - ditahan
+    - menahan
+    - meningkat
+    - menurun
+    - bertambah
+    - berkurang
+    - melambat
+    - melonjak
+    - anjlok
+    - merosot
+    - menguat
+    - melemah
+    - tumbuh
+    - susut
+    - stagnan
+    - lesu
+    - naiknya
+    - turunnya
+
+  # Named institutions and schemes. Naming one of these attributes a fact to
+  # a real body, so the sentence has to be supported.
+  institution_markers:
+    - bank indonesia
+    - bi
+    - ojk
+    - bps
+    - btn
+    - bca
+    - bri
+    - bni
+    - mandiri
+    - pemerintah
+    - kementerian
+    - kemenpupr
+    - pkp
+    - tapera
+    - flpp
+    - ppn
+    - dpr
+    - presiden
+    - menteri
+    - otoritas jasa keuangan
+    - badan pusat statistik
+    - real estat indonesia
+    - rei

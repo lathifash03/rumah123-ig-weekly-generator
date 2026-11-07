@@ -7,6 +7,8 @@ about 89 words, which is why counting lives here and not in a prompt.
 """
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass
 
 from .config import rules
@@ -16,6 +18,7 @@ from .textutil import (
     hashtags,
     keyword_matches,
     normalize_ws,
+    ungrounded_number_words,
     ungrounded_numbers,
     word_count_excluding_hashtags,
 )
@@ -93,6 +96,14 @@ def validate(caption: str, facts: list[Fact], source_display: str) -> list[Failu
     if forbidden["semicolon"] in text:
         failures.append(Failure(
             "semicolon", "Caption contains a semicolon. Use a full stop instead."))
+    # An en dash between digits is a range ("2024-2025"). An en dash with
+    # space beside it is being used as a dash, which the brief forbids.
+    en_dash = forbidden["en_dash_as_separator"]
+    if re.search(rf"(\s{re.escape(en_dash)}|{re.escape(en_dash)}\s)", text):
+        failures.append(Failure(
+            "en_dash",
+            "Caption uses an en dash as a separator. Use a full stop instead.",
+        ))
 
     # 6. banned phrases, matched on word boundaries rather than substring.
     # A plain substring search flagged "cuan" inside "suku bunga acuan", which
@@ -114,12 +125,25 @@ def validate(caption: str, facts: list[Fact], source_display: str) -> list[Failu
 
     # 8. number grounding
     blob = facts_blob(facts)
-    missing = ungrounded_numbers(text, blob, cfg.get("brand_tokens", []))
+    brand = cfg.get("brand_tokens", [])
+    missing = ungrounded_numbers(text, blob, brand)
     if missing:
         failures.append(Failure(
             "ungrounded_number",
             f"These numbers are not in the verified facts: {missing}. "
             f"Remove them or use only figures the facts state.",
+        ))
+
+    # 9. the same rule for figures written as Indonesian words. "naik delapan
+    # persen" is as much a numeric claim as "naik 8 persen", and against a
+    # verified "8,43 persen" it is a rounding.
+    missing_words = ungrounded_number_words(text, blob, brand)
+    if missing_words:
+        failures.append(Failure(
+            "ungrounded_number_word",
+            f"These quantities written in words are not in the verified "
+            f"facts: {missing_words}. Remove them or use only figures the "
+            f"facts state, written the way the facts write them.",
         ))
 
     return failures

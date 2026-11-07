@@ -75,31 +75,58 @@ def _is_emoji_codepoint(ch: str) -> bool:
     return any(lo <= cp <= hi for lo, hi in _EMOJI_RANGES)
 
 
+def _is_regional_indicator(ch: str) -> bool:
+    return 0x1F1E6 <= ord(ch) <= 0x1F1FF
+
+
+ZERO_WIDTH_JOINER = "\u200d"
+
+
 def count_emoji(text: str) -> int:
-    """Count emoji, treating a ZWJ sequence or a flag pair as one emoji."""
+    """Count emoji as a reader sees them, one grapheme cluster at a time.
+
+    A flag is two regional indicators, a family is several people joined by
+    zero-width joiners, and a red heart is a symbol plus variation selector
+    16. Each is one emoji on screen, so each counts once. Counting raw
+    codepoints instead reported a flag as two emoji.
+    """
     chars = list(text or "")
     count = 0
     i = 0
-    while i < len(chars):
-        if _is_emoji_codepoint(chars[i]):
-            count += 1
+    n = len(chars)
+    while i < n:
+        ch = chars[i]
+        if not _is_emoji_codepoint(ch):
             i += 1
-            # swallow the rest of one grapheme cluster: modifiers, variation
-            # selectors, and ZWJ-joined parts
-            while i < len(chars):
-                ch = chars[i]
-                if ch == "‍":  # ZWJ, next codepoint belongs to this emoji
-                    i += 2
-                    continue
-                if _is_emoji_codepoint(ch) or unicodedata.combining(ch):
-                    # a following regional indicator or skin-tone modifier
-                    if 0x1F3FB <= ord(ch) <= 0x1F3FF or ord(ch) == 0xFE0F:
-                        i += 1
-                        continue
-                    break
-                break
-        else:
+            continue
+
+        count += 1
+
+        # A flag is exactly a pair of regional indicators.
+        if _is_regional_indicator(ch):
             i += 1
+            if i < n and _is_regional_indicator(chars[i]):
+                i += 1
+            continue
+
+        i += 1
+        # Absorb the rest of this cluster: skin-tone modifiers, variation
+        # selectors, combining marks, keycap enclosures, and anything joined
+        # on with a zero-width joiner.
+        while i < n:
+            cp = ord(chars[i])
+            if chars[i] == ZERO_WIDTH_JOINER:
+                i += 1
+                if i < n:
+                    i += 1
+                continue
+            if (0x1F3FB <= cp <= 0x1F3FF          # skin tone modifier
+                    or cp in (0xFE0F, 0xFE0E)     # variation selectors
+                    or cp == 0x20E3               # combining enclosing keycap
+                    or unicodedata.combining(chars[i])):
+                i += 1
+                continue
+            break
     return count
 
 
@@ -140,6 +167,278 @@ def _number_variants(num: str) -> set[str]:
     let an unrelated figure match.
     """
     return {num, num.replace(".", ""), num.replace(",", ".")}
+
+
+def _numeric_interpretations(num: str) -> set[float]:
+    """Every plausible value of a number literal, as Indonesian writes them.
+
+    "8,43" is eight point four three, because a comma is the decimal mark.
+    "5.050" is five thousand and fifty, because a dot groups thousands, but a
+    dot is also how a decimal gets written by a careless hand, so a dot
+    yields both readings rather than one guessed reading.
+    """
+    out: set[float] = set()
+    if "," in num:
+        try:
+            out.add(float(num.replace(".", "").replace(",", ".")))
+        except ValueError:
+            pass
+        return out
+    if "." in num:
+        for candidate in (num.replace(".", ""), num):
+            try:
+                out.add(float(candidate))
+            except ValueError:
+                pass
+        return out
+    try:
+        out.add(float(num))
+    except ValueError:
+        pass
+    return out
+
+
+# --- Indonesian number words -------------------------------------------------
+# A caption can make a numeric claim without writing a digit: "naik delapan
+# persen" is as much a figure as "naik 8 persen". Grounding has to see those.
+
+_ID_SMALL = {
+    "nol": 0, "kosong": 0, "satu": 1, "dua": 2, "tiga": 3, "empat": 4,
+    "lima": 5, "enam": 6, "tujuh": 7, "delapan": 8, "sembilan": 9,
+    "sepuluh": 10, "sebelas": 11,
+}
+_ID_SCALE = {
+    "puluh": 10, "ratus": 100, "seratus": 100, "ribu": 1000, "seribu": 1000,
+    "juta": 10 ** 6, "miliar": 10 ** 9, "milyar": 10 ** 9,
+    "triliun": 10 ** 12,
+}
+_ID_FRACTION = {"setengah": 0.5, "separuh": 0.5, "seperempat": 0.25}
+
+# A run of number words is only read as a quantity when a measure word is
+# attached. Without this rule "salah satu bank" would be reported as the
+# number one, and every caption containing it would fail grounding.
+_ID_MEASURE_WORDS = frozenset("""
+persen kali lipat unit rumah tahun bulan hari pekan minggu kuartal
+rupiah ribu juta miliar milyar triliun meter hektare hektar orang
+poin basis
+""".split())
+
+_ID_NUMBER_TOKEN = (
+    set(_ID_SMALL) | set(_ID_SCALE) | set(_ID_FRACTION) | {"belas", "koma"}
+)
+
+
+def _parse_id_number(tokens: list[str]) -> float | None:
+    """Value of a run of Indonesian number words, or None if it does not parse.
+
+    Covers the forms that appear in captions: "delapan", "dua belas",
+    "dua puluh lima", "seratus", "dua juta", "delapan koma empat tiga".
+    """
+    if not tokens:
+        return None
+    if len(tokens) == 1 and tokens[0] in _ID_FRACTION:
+        return _ID_FRACTION[tokens[0]]
+
+    total = 0.0
+    current = 0.0
+    seen_any = False
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i]
+        if tok == "koma":
+            digits = []
+            i += 1
+            while i < len(tokens) and tokens[i] in _ID_SMALL:
+                digits.append(str(_ID_SMALL[tokens[i]]))
+                i += 1
+            if not digits or not seen_any:
+                return None
+            base = total + current
+            try:
+                return float(f"{base:.0f}." + "".join(digits))
+            except ValueError:
+                return None
+        if tok == "belas":
+            if current == 0:
+                return None
+            current += 10
+            seen_any = True
+            i += 1
+            continue
+        if tok in _ID_FRACTION:
+            current += _ID_FRACTION[tok]
+            seen_any = True
+            i += 1
+            continue
+        if tok in _ID_SCALE:
+            scale = _ID_SCALE[tok]
+            if scale >= 1000:
+                total = (total + (current or 1)) * scale
+                current = 0.0
+            else:
+                current = (current or 1) * scale
+            seen_any = True
+            i += 1
+            continue
+        if tok in _ID_SMALL:
+            current += _ID_SMALL[tok]
+            seen_any = True
+            i += 1
+            continue
+        return None
+    return (total + current) if seen_any else None
+
+
+# Scale words multiply the number in front of them: "2 juta", "dua juta",
+# "Rp 1,2 miliar".
+_SCALE_MULTIPLIER = {
+    "ribu": 10 ** 3, "juta": 10 ** 6, "miliar": 10 ** 9,
+    "milyar": 10 ** 9, "triliun": 10 ** 12,
+}
+
+# The unit a quantity is measured in, collapsed into classes. A value without
+# its unit is not comparable: "2 juta unit" and "dua kali lipat" both reduce
+# to the number two, but one is a count of homes and the other is a doubling.
+_MEASURE_CLASS = {
+    "persen": "percent", "perseratus": "percent",
+    "kali": "multiplier", "lipat": "multiplier",
+    "unit": "count", "rumah": "count", "orang": "count", "jiwa": "count",
+    "tahun": "time", "bulan": "time", "hari": "time", "pekan": "time",
+    "minggu": "time", "kuartal": "time",
+    "rupiah": "money",
+    "meter": "area", "hektare": "area", "hektar": "area",
+    "poin": "points", "basis": "points",
+}
+
+
+def _measure_class(word: str) -> str:
+    return _MEASURE_CLASS.get(word, "")
+
+
+def _tokenize_quantities(text: str) -> list[str]:
+    return re.findall(r"\d+(?:[.,]\d+)*|[a-z]+|%", text.lower())
+
+
+def quantity_claims(
+    text: str,
+    ignore_tokens: tuple[str, ...] | list[str] = (),
+    words_only: bool = False,
+) -> list[tuple[str, frozenset, str]]:
+    """Quantities in text as (phrase, possible values, measure class).
+
+    Handles digits ("8,43 persen", "2 juta unit", "Rp 1,2 miliar"), Indonesian
+    number words ("delapan persen", "dua kali lipat"), and the mixture of a
+    digit with a scale word. words_only restricts the scan to number words,
+    which is what the number-word grounding rule checks in a caption.
+
+    A value carries its measure class because a bare value is not comparable.
+    Grounding "dua kali lipat" against a fact mentioning "2 juta unit" would
+    otherwise pass, since both reduce to two.
+    """
+    cleaned = strip_tokens(strip_hashtags(text or ""), ignore_tokens)
+    tokens = _tokenize_quantities(cleaned)
+    out: list[tuple[str, frozenset, str]] = []
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i]
+        values: set[float] | None = None
+        phrase_parts: list[str] = []
+
+        if not words_only and NUMBER_RE.fullmatch(tok):
+            values = set(_numeric_interpretations(tok))
+            phrase_parts = [tok]
+            i += 1
+        elif tok in _ID_NUMBER_TOKEN and tok not in ("koma", "belas"):
+            j = i
+            run: list[str] = []
+            while j < len(tokens) and tokens[j] in _ID_NUMBER_TOKEN:
+                run.append(tokens[j])
+                j += 1
+            parsed = _parse_id_number(run)
+            if parsed is None:
+                i = max(j, i + 1)
+                continue
+            values = {parsed}
+            phrase_parts = list(run)
+            i = j
+        else:
+            i += 1
+            continue
+
+        # an optional scale word multiplies the value
+        if i < len(tokens) and tokens[i] in _SCALE_MULTIPLIER:
+            # "dua juta" already consumed "juta" as part of the word run
+            if tokens[i] not in phrase_parts:
+                mult = _SCALE_MULTIPLIER[tokens[i]]
+                values = {v * mult for v in values}
+                phrase_parts.append(tokens[i])
+                i += 1
+
+        # an optional measure word names the unit
+        measure = ""
+        if i < len(tokens):
+            nxt = tokens[i]
+            if nxt == "%":
+                measure = "percent"
+                phrase_parts.append("%")
+                i += 1
+            elif _measure_class(nxt):
+                measure = _measure_class(nxt)
+                phrase_parts.append(nxt)
+                i += 1
+                # "dua kali lipat": absorb the second half of the unit
+                if (i < len(tokens) and _measure_class(tokens[i]) == measure
+                        and tokens[i] != nxt):
+                    phrase_parts.append(tokens[i])
+                    i += 1
+
+        if words_only and measure == "" and not any(
+                part in _SCALE_MULTIPLIER for part in phrase_parts):
+            # a bare number word with no unit is not a quantitative claim
+            continue
+
+        out.append((" ".join(phrase_parts), frozenset(values), measure))
+    return out
+
+
+def number_word_claims(
+    text: str,
+    ignore_tokens: tuple[str, ...] | list[str] = (),
+) -> list[tuple[str, float]]:
+    """Indonesian number-word quantities as (phrase, value)."""
+    return [
+        (phrase, min(values))
+        for phrase, values, _ in quantity_claims(text, ignore_tokens,
+                                                 words_only=True)
+    ]
+
+
+def ungrounded_number_words(
+    caption: str,
+    facts_text: str,
+    ignore_tokens: tuple[str, ...] | list[str] = (),
+) -> list[str]:
+    """Number-word quantities in the caption that the facts do not state.
+
+    A phrase is grounded when the facts give the same value in the same unit,
+    written either as digits or in words. "naik delapan persen" against a fact
+    of "8,43 persen" is not grounded: it is a rounding, and rounding a
+    verified figure is what these rules exist to catch.
+    """
+    fact_claims = quantity_claims(facts_text, ignore_tokens)
+
+    missing, seen = [], set()
+    for phrase, values, measure in quantity_claims(caption, ignore_tokens,
+                                                   words_only=True):
+        grounded = any(
+            measure == fact_measure and values & fact_values
+            for _, fact_values, fact_measure in fact_claims
+        )
+        if grounded or phrase in seen:
+            continue
+        seen.add(phrase)
+        missing.append(phrase)
+    return missing
 
 
 def ungrounded_numbers(
@@ -317,3 +616,14 @@ def slugify(text: str, max_len: int = 48) -> str:
     s = unicodedata.normalize("NFKD", (text or "").lower())
     s = re.sub(r"[^a-z0-9]+", "-", s).strip("-")
     return s[:max_len].strip("-") or "item"
+
+
+def coverage_key(text: str) -> str:
+    """Letters and digits only, lowercased, for checking that a list of
+    sentences covers a caption completely.
+
+    Punctuation and whitespace are discarded so a model splitting a caption
+    into sentences is not failed for re-spacing it or dropping a comma, while
+    any skipped, reordered or invented word still changes the key.
+    """
+    return re.sub(r"[^0-9a-z]+", "", strip_hashtags(text or "").lower())
