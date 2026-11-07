@@ -1,0 +1,95 @@
+# Relevance and caption rules. Everything here is enforced by pure code in
+# src/filter.py and src/validate.py - no LLM is asked to judge these.
+
+relevance:
+  # Minimum number of distinct keyword matches for an item to be kept.
+  min_matches: 1
+
+  # Matched case-insensitively with WORD BOUNDARIES, not naive substring.
+  # Reason: a bare substring match for "mbr" matched unrelated finance
+  # headlines during feed verification, and "properti" must not fire on a
+  # longer unrelated token. Boundary matching is what src/filter.py does.
+  keywords:
+    - kpr
+    - kredit pemilikan rumah
+    - suku bunga
+    - bunga kpr
+    - bi rate
+    - rumah subsidi
+    - subsidi rumah
+    - rumah murah
+    - flpp
+    - tapera
+    - harga rumah
+    - properti
+    - cicilan
+    - angsuran
+    - hunian
+    - perumahan
+    - rumah pertama
+    - dp rumah
+    - uang muka
+    - apartemen
+    - rusun
+    - mbr
+    - masyarakat berpenghasilan rendah
+    - backlog rumah
+    - btn
+    - real estate
+    - sewa rumah
+    - developer properti
+    - ltv
+
+  # Items whose title matches any of these are dropped even if a keyword hit.
+  # These are recurring non-actionable formats seen in the live feeds.
+  title_blocklist:
+    - "^video:"
+    - "^foto:"
+    - "^infografis:"
+    - "^live:"
+    - "prediksi skor"
+    - "^potret"
+
+dedupe:
+  # Titles with a similarity ratio at or above this are treated as the same
+  # story. The detik IKN "Rusun MBR" cluster during verification was four
+  # near-identical headlines, which is what this guards against.
+  title_similarity_threshold: 0.82
+
+caption:
+  max_words_excluding_hashtags: 90
+  hashtag_count: 2
+  required_hashtag: "#Rumah123"
+  max_emoji: 1
+  forbidden_characters:
+    em_dash: "—"
+    en_dash_as_separator: "–"
+    semicolon: ";"
+
+  # Hard-selling / hype language that breaks the brand voice.
+  banned_phrases:
+    - "buruan"
+    - "jangan sampai ketinggalan"
+    - "jangan sampai menyesal"
+    - "kesempatan terakhir"
+    - "promo terbatas"
+    - "stok terbatas"
+    - "harga termurah"
+    - "termurah"
+    - "dijamin"
+    - "pasti untung"
+    - "untung besar"
+    - "cuan"
+    - "segera miliki"
+    - "miliki sekarang"
+    - "hubungi kami"
+    - "klik link di bio"
+    - "daftar sekarang"
+    - "investasi terbaik"
+    - "pilihan terbaik"
+    - "wajib punya"
+    - "gratis"
+    - "diskon besar"
+    - "bunga 0%"
+    - "tanpa risiko"
+    - "sudah pasti"

@@ -1,0 +1,117 @@
+# Indonesian property / personal-finance news feeds.
+#
+# Every URL below was verified by actually fetching it on 2026-11-07.
+# A feed was only enabled if it returned HTTP 200, parsed as a feed, exposed
+# parseable publication dates, and carried at least one recent item.
+#
+# Live fetch failures are recorded per-run in run_log.json (feeds_failed).
+# The rejected_candidates block at the bottom is documentation of what was
+# tried and why it was dropped - those URLs are never fetched by the pipeline.
+
+request:
+  # Honest, self-identifying user agent. We do not spoof a browser UA to get
+  # past bot checks; feeds that block this UA are recorded as blocked instead.
+  user_agent: "Mozilla/5.0 (compatible; rumah123-ig-weekly-generator/0.1)"
+  timeout_seconds: 25
+
+window_days: 7
+
+feeds:
+  - name: "detikProperti"
+    display: "detikProperti"
+    url: "https://www.detik.com/properti/rss"
+    verified: "2026-11-07"
+    note: "Dedicated property channel. 100 entries, newest ~0.01d at verification."
+
+  - name: "detikFinance"
+    display: "detikFinance"
+    url: "https://finance.detik.com/rss"
+    verified: "2026-11-07"
+    note: "100 entries, newest ~0.02d. Carries KPR / interest-rate stories."
+
+  - name: "CNBC Indonesia"
+    display: "CNBC Indonesia"
+    url: "https://www.cnbcindonesia.com/rss"
+    verified: "2026-11-07"
+    note: "100 entries, newest ~0.01d."
+
+  - name: "CNBC Indonesia MyMoney"
+    display: "CNBC Indonesia"
+    url: "https://www.cnbcindonesia.com/mymoney/rss"
+    verified: "2026-11-07"
+    note: "Personal-finance channel, relevant to KPR and cicilan. newest ~0.74d."
+
+  - name: "CNN Indonesia Ekonomi"
+    display: "CNN Indonesia"
+    url: "https://www.cnnindonesia.com/ekonomi/rss"
+    verified: "2026-11-07"
+    note: "100 entries, newest ~0.04d. Source of the BI house-price survey story."
+
+  - name: "SINDOnews Ekbis"
+    display: "SINDOnews"
+    url: "https://ekbis.sindonews.com/rss"
+    verified: "2026-11-07"
+    note: "30 entries, newest ~0.06d."
+
+  - name: "Kontan Keuangan"
+    display: "Kontan"
+    url: "https://keuangan.kontan.co.id/rss"
+    verified: "2026-11-07"
+    note: "Banking/finance. 25 entries, newest ~0.04d. 0 property hits in the verification week."
+
+  - name: "ANTARA Ekonomi"
+    display: "ANTARA"
+    url: "https://www.antaranews.com/rss/ekonomi.xml"
+    verified: "2026-11-07"
+    note: "20 entries, newest ~0.08d. 0 property hits in the verification week."
+
+  - name: "Liputan6 Bisnis"
+    display: "Liputan6"
+    url: "https://feed.liputan6.com/rss/bisnis"
+    verified: "2026-11-07"
+    note: "50 entries, newest ~0.02d."
+
+  - name: "Katadata"
+    display: "Katadata"
+    url: "https://www.katadata.co.id/rss"
+    verified: "2026-11-07"
+    note: "25 entries, newest ~0.02d. Data journalism, 0 property hits in the verification week."
+
+# Tried and rejected on 2026-11-07. Kept here so the feed list is auditable.
+# These are NOT fetched.
+rejected_candidates:
+  blocked_by_bot_check:
+    # Returned HTTP 403 to an honest self-identifying user agent. Not retried
+    # with a spoofed browser UA by design.
+    - "https://rss.kompas.com/api/feed/properti  # 403"
+    - "https://rss.kompas.com/api/feed/ekonomi   # 403"
+    - "https://ekonomi.bisnis.com/rss            # 403"
+    - "https://www.bisnis.com/rss                # 403"
+    - "https://properti.bisnis.com/rss           # 403"
+    - "https://rss.tempo.co/ekonomi              # 403"
+  auth_required:
+    - "https://artikel.rumah123.com/feed         # 401 - Rumah123's own article feed is not public"
+  live_but_stale:
+    - "https://finance.detik.com/properti/rss    # 200, on-topic (KPR headlines) but newest item 513 days old"
+    - "https://feed.liputan6.com/rss/properti    # 200 but only 2 entries, newest 57 days old"
+    - "https://rss.tempo.co/bisnis               # 200 but newest item 53 days old"
+  not_found_or_empty:
+    - "https://properti.kompas.com/rss           # 404"
+    - "https://properti.kompas.com/feed          # 404"
+    - "https://indeks.kompas.com/properti/rss    # 404"
+    - "https://www.kompas.com/getrss             # 404"
+    - "https://ekonomi.kompas.com/rss            # 404"
+    - "https://money.kompas.com/rss              # 404"
+    - "https://www.housingestate.id/feed         # 200 but 0 entries"
+    - "https://www.housingestate.id/rss          # 200 but 0 entries"
+    - "https://www.rumah.com/rss                 # 200 but 0 entries"
+    - "https://www.rumah.com/berita-properti/feed # 200 but 0 entries"
+    - "https://www.99.co/blog/indonesia/feed     # 200 but 0 entries"
+    - "https://berita.99.co/feed                 # 410 Gone"
+    - "https://www.lamudi.co.id/journal/feed     # 429 rate limited"
+    - "https://www.kontan.co.id/rss              # 200 but 0 entries"
+    - "https://www.medcom.id/rss/ekonomi         # 200 but 0 entries"
+    - "https://infobanknews.com/feed/            # 200 but 0 entries"
+    - "https://rss.detik.com/index.php/finance   # connection closed without response"
+    - "https://investor.id/rss                   # 404"
+    - "https://www.beritasatu.com/rss            # 404"
