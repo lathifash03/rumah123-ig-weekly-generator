@@ -7,12 +7,17 @@ import pytest
 from src.retry import run_item, run_variant
 from tests.conftest import PASSING_CAPTION, StubLLM
 
-GOOD = {"caption": PASSING_CAPTION, "image_text": "Harga rumah naik 8,43 persen"}
+# The generator returns the caption body plus a topic hashtag; the hashtag
+# line is assembled in code, so these fixtures no longer carry one.
+PASSING_BODY = PASSING_CAPTION.rsplit("\n\n", 1)[0]
+
+GOOD = {"caption_body": PASSING_BODY, "topic_hashtag": "KPR",
+        "image_text": "Harga rumah naik 8,43 persen"}
 
 # Fails validation: banned phrase, em dash, duplicate hashtag, bad number,
 # and no source name.
-BAD = {"caption": "Buruan beli — naik 99 persen #Rumah123 #Rumah123",
-       "image_text": "x"}
+BAD = {"caption_body": "Buruan beli \u2014 naik 99 persen",
+       "topic_hashtag": "KPR", "image_text": "x"}
 
 FACT_QUOTE = "harga rumah naik 8,43 persen pada kuartal III 2026"
 RATE_QUOTE = "Bank Indonesia menahan suku bunga acuan di 5,25 persen"
@@ -156,3 +161,56 @@ def test_verified_facts_are_in_the_generator_prompt(vitem):
     assert "VERIFIED FACTS" in user
     assert "8,43" in user
     assert "CNN Indonesia" in user
+
+
+# --- regression: the retry used to lose correct content ----------------------
+# In the first real run a caption failed only on the source name. The retry
+# fixed the source and dropped both hashtags, which then failed, and the third
+# attempt did the same. The generator was rewriting from scratch because the
+# retry message never showed it what it had written.
+
+# Fails only the source rule: hashtags and figures are fine.
+MISSING_SOURCE_ONLY = {
+    "caption_body": (
+        "Pernah merasa harga rumah bergerak lebih cepat dari tabungan kamu?\n\n"
+        "Harga rumah naik 8,43 persen pada kuartal III.\n\n"
+        "Di Rumah123 kamu bisa lihat-lihat dulu.\n\n"
+        "Menurut kamu, apa langkah pertama yang masuk akal?"
+    ),
+    "topic_hashtag": "KPR",
+    "image_text": "Harga rumah naik 8,43 persen",
+}
+
+
+def test_retry_message_includes_the_previous_caption(vitem):
+    llm = StubLLM([MISSING_SOURCE_ONLY, GOOD, CC_OK])
+    run_variant(llm, vitem, 0)
+    retry_prompt = llm.calls[1]["user"]
+    assert "YOUR PREVIOUS CAPTION" in retry_prompt
+    assert "#Rumah123 #KPR" in retry_prompt, (
+        "the previous caption's hashtag line must be visible on retry, or the "
+        "model cannot keep what was already correct"
+    )
+
+
+def test_retry_message_tells_the_model_to_edit_not_rewrite(vitem):
+    llm = StubLLM([MISSING_SOURCE_ONLY, GOOD, CC_OK])
+    run_variant(llm, vitem, 0)
+    retry_prompt = llm.calls[1]["user"]
+    assert "Change only what the failures below require" in retry_prompt
+
+
+def test_first_attempt_has_no_previous_caption_section(vitem):
+    llm = StubLLM([GOOD, CC_OK])
+    run_variant(llm, vitem, 0)
+    assert "YOUR PREVIOUS CAPTION" not in llm.calls[0]["user"]
+
+
+def test_each_retry_carries_the_most_recent_caption(vitem):
+    """Attempt 3 must see attempt 2's caption, not attempt 1's."""
+    second = {"caption_body": "Caption kedua yang juga gagal.",
+              "topic_hashtag": "KPR", "image_text": "x"}
+    llm = StubLLM([MISSING_SOURCE_ONLY, second, GOOD, CC_OK])
+    run_variant(llm, vitem, 0, max_retries=2)
+    third_prompt = llm.calls[2]["user"]
+    assert "Caption kedua yang juga gagal." in third_prompt

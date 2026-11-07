@@ -270,3 +270,73 @@ def test_sentences_that_must_be_treated_as_factual(sentence, cc_cfg, brand):
 ])
 def test_sentences_that_are_genuinely_voice(sentence, cc_cfg, brand):
     assert looks_factual(sentence, cc_cfg, brand) == []
+
+
+# --- the coverage gate in detail ---------------------------------------------
+# The risk is a skipped sentence going unchecked. A duplicated sentence is not
+# a risk, and the first version of this gate failed on duplicates, costing
+# retries without catching anything unsafe.
+
+from src.claimcheck import verify_coverage
+
+COV_CAPTION = "Harga naik 8,43 persen. Ambil waktumu. #Rumah123 #KPR"
+
+
+def test_coverage_complete_passes():
+    ok, reason, _ = verify_coverage(
+        COV_CAPTION, ["Harga naik 8,43 persen.", "Ambil waktumu."])
+    assert ok, reason
+
+
+def test_coverage_tolerates_a_duplicated_sentence():
+    ok, reason, cov = verify_coverage(
+        COV_CAPTION,
+        ["Harga naik 8,43 persen.", "Harga naik 8,43 persen.", "Ambil waktumu."])
+    assert ok, reason
+    assert cov["duplicate_sentences"] == 1
+
+
+def test_coverage_rejects_a_skipped_sentence():
+    ok, reason, cov = verify_coverage(COV_CAPTION, ["Harga naik 8,43 persen."])
+    assert not ok
+    assert "never returned" in reason
+    assert "ambilwaktumu" in cov["uncovered_tail"]
+
+
+def test_coverage_rejects_an_invented_sentence():
+    ok, reason, cov = verify_coverage(
+        COV_CAPTION,
+        ["Harga naik 8,43 persen.", "Ambil waktumu.", "Kalimat palsu."])
+    assert not ok
+    assert "not in the caption" in reason
+    assert cov["invented_sentence"] == "Kalimat palsu."
+
+
+def test_coverage_tolerates_respacing_and_lost_punctuation():
+    ok, reason, _ = verify_coverage(
+        COV_CAPTION, ["harga  naik 843 persen", "ambil waktumu"])
+    assert ok, reason
+
+
+def test_coverage_ignores_the_hashtag_line():
+    ok, _, _ = verify_coverage(
+        COV_CAPTION, ["Harga naik 8,43 persen.", "Ambil waktumu.",
+                      "#Rumah123 #KPR"])
+    assert ok
+
+
+def test_coverage_of_an_empty_sentence_list_fails():
+    ok, reason, _ = verify_coverage(COV_CAPTION, [])
+    assert not ok
+
+
+def test_duplicate_sentences_do_not_break_the_full_check(facts):
+    """End to end: a repeated sentence still passes the claim check."""
+    caption = "Harga rumah naik 8,43 persen. Ambil waktumu. #Rumah123 #KPR"
+    llm = StubLLM([{"sentences": [
+        sent("Harga rumah naik 8,43 persen.", quote=FACT_QUOTE),
+        sent("Harga rumah naik 8,43 persen.", quote=FACT_QUOTE),
+        sent("Ambil waktumu.", factual=False, supported=False),
+    ]}])
+    failures, _ = check(llm, caption, facts)
+    assert failures == []

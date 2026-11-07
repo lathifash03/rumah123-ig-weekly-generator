@@ -60,6 +60,55 @@ def looks_factual(text: str, cfg: dict, brand_tokens) -> list[str]:
     return reasons
 
 
+def verify_coverage(
+    caption: str,
+    sentence_texts: list[str],
+) -> tuple[bool, str, dict]:
+    """Whether the returned sentences account for the whole caption.
+
+    The risk being guarded against is a SKIPPED sentence, which would go
+    unchecked while the caption still passed. Two things are rejected:
+
+    - skipped: the sentences do not reach the end of the caption.
+    - invented: a sentence that is not in the caption at all, which means the
+      model is checking something it made up.
+
+    A duplicated sentence is tolerated. The first version of this gate
+    compared the joined sentences to the caption and so failed whenever the
+    model repeated a sentence, which it did intermittently in a real run. That
+    cost retries without catching anything unsafe, since a sentence checked
+    twice is still checked.
+    """
+    expected = coverage_key(caption)
+    pos = 0
+    duplicates = 0
+    for text in sentence_texts:
+        key = coverage_key(text)
+        if not key:
+            continue
+        if expected.startswith(key, pos):
+            pos += len(key)
+        elif key in expected:
+            duplicates += 1          # repeated or re-ordered, already covered
+        else:
+            return False, "a returned sentence is not in the caption", {
+                "expected_chars": len(expected),
+                "covered_chars": pos,
+                "invented_sentence": text[:200],
+                "returned_sentences": [t[:200] for t in sentence_texts],
+            }
+    if pos < len(expected):
+        return False, "part of the caption was never returned", {
+            "expected_chars": len(expected),
+            "covered_chars": pos,
+            "uncovered_tail": expected[pos:pos + 120],
+            "returned_sentences": [t[:200] for t in sentence_texts],
+        }
+    return True, "", {"expected_chars": len(expected),
+                      "covered_chars": pos,
+                      "duplicate_sentences": duplicates}
+
+
 def check(llm, caption: str, facts: list[Fact]) -> tuple[list[Failure], list[dict]]:
     """Return (failures, per-sentence detail for the log)."""
     if not facts:
@@ -83,20 +132,17 @@ def check(llm, caption: str, facts: list[Fact]) -> tuple[list[Failure], list[dic
     failures: list[Failure] = []
     detail: list[dict] = []
 
-    # --- check 1: the sentences must reproduce the caption -------------------
-    returned = coverage_key("".join(s.get("text", "") for s in sentences))
-    expected = coverage_key(caption)
-    if returned != expected:
+    # --- check 1: the sentences must cover the whole caption ----------------
+    ok, reason, cov = verify_coverage(caption, [s.get("text", "")
+                                                for s in sentences])
+    if not ok:
         failures.append(Failure(
             "sentence_coverage",
-            "The claim check did not cover the whole caption, so parts of it "
-            "were never checked. Treating the caption as unverified.",
+            f"The claim check did not cover the whole caption ({reason}), so "
+            f"part of it was never checked. Treating the caption as "
+            f"unverified.",
         ))
-        detail.append({
-            "verdict": "coverage_mismatch",
-            "expected_chars": len(expected),
-            "returned_chars": len(returned),
-        })
+        detail.append({"verdict": "coverage_mismatch", "reason": reason, **cov})
         return failures, detail
 
     # --- check 2 and 3: per sentence -----------------------------------------

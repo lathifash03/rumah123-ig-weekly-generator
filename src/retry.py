@@ -35,12 +35,14 @@ def run_variant(
     """Generate one variant, validating and claim-checking each attempt."""
     attempts: list[dict] = []
     failures_text = ""
+    previous_caption = ""
     caption: Caption | None = None
 
     for attempt_no in range(max_retries + 1):
         record: dict = {"attempt": attempt_no + 1}
         try:
-            caption = generate.generate(llm, vitem, variant_index, failures_text)
+            caption = generate.generate(llm, vitem, variant_index,
+                                        failures_text, previous_caption)
         except Exception as exc:
             record["error"] = f"generate failed: {type(exc).__name__}: {exc}"[:200]
             record["failures"] = [record["error"]]
@@ -85,6 +87,7 @@ def run_variant(
             return VariantResult(variant_index, True, caption, attempts)
 
         failures_text = format_failures(failures)
+        previous_caption = caption.caption
 
     return VariantResult(variant_index, False, caption, attempts)
 

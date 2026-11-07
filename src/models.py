@@ -101,9 +101,13 @@ GENERATE_SCHEMA = {
     "schema": {
         "type": "object",
         "additionalProperties": False,
-        "required": ["caption", "image_text"],
+        "required": ["caption_body", "topic_hashtag", "image_text"],
         "properties": {
-            "caption": {"type": "string"},
+            # The caption WITHOUT its hashtag line. src/generate.py appends
+            # the hashtag line deterministically.
+            "caption_body": {"type": "string"},
+            # One topic hashtag, with or without the leading "#".
+            "topic_hashtag": {"type": "string"},
             "image_text": {"type": "string"},
         },
     },

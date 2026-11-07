@@ -1,0 +1,1433 @@
+{
+  "run_started_utc": "2026-11-07T04:22:32.730532+00:00",
+  "run_finished_utc": "2026-11-07T04:24:11.540443+00:00",
+  "duration_seconds": 98.8,
+  "model": "gpt-4.1-mini",
+  "prompt_versions": {
+    "claimcheck.md": "c2b7821420aa7825",
+    "extract.md": "250e0ac491bc3e2a",
+    "generate.md": "50e51652dec6eff0",
+    "rank.md": "1c56454f3ef6bdb9"
+  },
+  "feeds_ok": [
+    {
+      "name": "detikProperti",
+      "url": "https://www.detik.com/properti/rss",
+      "entries": 100,
+      "kept_in_window": 100,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "detikFinance",
+      "url": "https://finance.detik.com/rss",
+      "entries": 100,
+      "kept_in_window": 100,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "CNBC Indonesia",
+      "url": "https://www.cnbcindonesia.com/rss",
+      "entries": 100,
+      "kept_in_window": 100,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "CNBC Indonesia MyMoney",
+      "url": "https://www.cnbcindonesia.com/mymoney/rss",
+      "entries": 100,
+      "kept_in_window": 21,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "CNN Indonesia Ekonomi",
+      "url": "https://www.cnnindonesia.com/ekonomi/rss",
+      "entries": 100,
+      "kept_in_window": 100,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "SINDOnews Ekbis",
+      "url": "https://ekbis.sindonews.com/rss",
+      "entries": 30,
+      "kept_in_window": 30,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "Kontan Keuangan",
+      "url": "https://keuangan.kontan.co.id/rss",
+      "entries": 25,
+      "kept_in_window": 25,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "ANTARA Ekonomi",
+      "url": "https://www.antaranews.com/rss/ekonomi.xml",
+      "entries": 20,
+      "kept_in_window": 4,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "Liputan6 Bisnis",
+      "url": "https://feed.liputan6.com/rss/bisnis",
+      "entries": 50,
+      "kept_in_window": 50,
+      "skipped_no_date": 0
+    },
+    {
+      "name": "Katadata",
+      "url": "https://www.katadata.co.id/rss",
+      "entries": 25,
+      "kept_in_window": 25,
+      "skipped_no_date": 0
+    }
+  ],
+  "feeds_failed": [],
+  "counts": {
+    "fetched_in_window": 555,
+    "after_relevance": 43,
+    "after_dedupe": 37,
+    "after_ranking": 3,
+    "drafts_written": 3
+  },
+  "ranking": [
+    {
+      "index": 34,
+      "url": "https://www.cnnindonesia.com/ekonomi/20261106134338-78-1424115/survei-bi-harga-rumah-naik-tipis-penjualan-anjlok-843-persen",
+      "title": "Survei BI: Harga Rumah Naik Tipis, Penjualan Anjlok 8,43 Persen",
+      "score": 10,
+      "kept": true,
+      "reason": "Provides specific housing price increase and sales decline percentages for Q3 2026 in Indonesia's primary housing market."
+    },
+    {
+      "index": 21,
+      "url": "https://www.detik.com/properti/berita/d-8736334/190-ribuan-rumah-subsidi-terjual-buruh-pekerja-swasta-jadi-pembeli-terbanyak",
+      "title": "190 Ribuan Rumah Subsidi Terjual, Buruh-Pekerja Swasta Jadi Pembeli Terbanyak",
+      "score": 9,
+      "kept": true,
+      "reason": "Reports exact number of subsidized housing KPRs given and main buyer segments as of October 2026."
+    },
+    {
+      "index": 14,
+      "url": "https://www.detik.com/properti/berita/d-8738846/fakta-rusun-subsidi-manggarai-yang-belum-dibangun-tapi-sudah-diburu-1-500-orang",
+      "title": "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+      "score": 8,
+      "kept": true,
+      "reason": "Gives details on rusun subsidi Manggarai including unit types, start date, and high interest from young buyers."
+    }
+  ],
+  "extraction": [
+    {
+      "url": "https://www.cnnindonesia.com/ekonomi/20261106134338-78-1424115/survei-bi-harga-rumah-naik-tipis-penjualan-anjlok-843-persen",
+      "title": "Survei BI: Harga Rumah Naik Tipis, Penjualan Anjlok 8,43 Persen",
+      "article_chars": 3489,
+      "facts_kept": 5,
+      "facts_dropped": 1,
+      "dropped_detail": [
+        {
+          "claim": "Mayoritas pembelian rumah di pasar primer dilakukan melalui skema KPR dengan pangsa 70,68 persen.",
+          "quote": "majoritas pembelian rumah di pasar primer dilakukan melalui skema KPR dengan pangsa 70,68 persen.",
+          "reason": "quote_not_found_in_article"
+        }
+      ]
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8736334/190-ribuan-rumah-subsidi-terjual-buruh-pekerja-swasta-jadi-pembeli-terbanyak",
+      "title": "190 Ribuan Rumah Subsidi Terjual, Buruh-Pekerja Swasta Jadi Pembeli Terbanyak",
+      "article_chars": 3387,
+      "facts_kept": 6,
+      "facts_dropped": 0,
+      "dropped_detail": []
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8738846/fakta-rusun-subsidi-manggarai-yang-belum-dibangun-tapi-sudah-diburu-1-500-orang",
+      "title": "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+      "article_chars": 4394,
+      "facts_kept": 5,
+      "facts_dropped": 1,
+      "dropped_detail": [
+        {
+          "claim": "Sebanyak 1.500 milenial dan Gen Z tertarik membeli rusun subsidi Manggarai, dengan 60 persen memilih tipe 45 meter persegi.",
+          "quote": "Ada 1.500 Peminat dari Milenial dan Gen Z... Dengan 60 persen dari total peminat Maraya Residences memilih tipe unit 45 meter persegi",
+          "reason": "quote_not_found_in_article"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "url": "https://www.cnnindonesia.com/ekonomi/20261106134338-78-1424115/survei-bi-harga-rumah-naik-tipis-penjualan-anjlok-843-persen",
+      "title": "Survei BI: Harga Rumah Naik Tipis, Penjualan Anjlok 8,43 Persen",
+      "source": "CNN Indonesia",
+      "facts_verified": 5,
+      "facts_dropped": 1,
+      "variants": [
+        {
+          "variant_index": 0,
+          "passed": false,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun. Menurut CNN Indonesia, harga properti residensial di pasar primer naik 0,58 persen pada kuartal III 2026 secara tahunan. Namun, penjualan hunian turun 8,43 persen, terutama rumah tipe besar turun 10,78 persen. Suku bunga KPR juga stabil di 7,47 persen. Nilai KPR justru tumbuh 4,80 persen. Kamu bisa santai lihat-lihat rumah di Rumah123 dulu.\n\nBagaimana menurut kamu kondisi pasar rumah sekarang?\n\n#Rumah123 #HargaRumah",
+              "image_text": "Harga Properti Primer Naik 0,58 Persen",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "verdict": "coverage_mismatch",
+                  "reason": "part of the caption was never returned",
+                  "expected_chars": 380,
+                  "covered_chars": 335,
+                  "uncovered_tail": "bagaimanamenurutkamukondisipasarrumahsekarang",
+                  "returned_sentences": [
+                    "Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun.",
+                    "Menurut CNN Indonesia, harga properti residensial di pasar primer naik 0,58 persen pada kuartal III 2026 secara tahunan.",
+                    "Namun, penjualan hunian turun 8,43 persen, terutama rumah tipe besar turun 10,78 persen.",
+                    "Suku bunga KPR juga stabil di 7,47 persen.",
+                    "Nilai KPR justru tumbuh 4,80 persen.",
+                    "Kamu bisa santai lihat-lihat rumah di Rumah123 dulu."
+                  ]
+                }
+              ],
+              "claimcheck_failures": [
+                "[sentence_coverage] The claim check did not cover the whole caption (part of the caption was never returned), so part of it was never checked. Treating the caption as unverified."
+              ],
+              "failures": [
+                "[sentence_coverage] The claim check did not cover the whole caption (part of the caption was never returned), so part of it was never checked. Treating the caption as unverified."
+              ],
+              "failure_rules": [
+                "sentence_coverage"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun. Menurut CNN Indonesia, harga properti residensial di pasar primer naik 0,58 persen pada kuartal III 2026 secara tahunan. Namun, penjualan hunian turun 8,43 persen, terutama penjualan rumah tipe besar yang turun 10,78 persen. Suku bunga KPR tercatat stabil di level 7,47 persen pada kuartal III 2026. Meski begitu, nilai KPR naik 4,80 persen secara tahunan. Kamu bisa santai lihat-lihat rumah di Rumah123 dulu.\n\nBagaimana menurut kamu kondisi pasar rumah sekarang?\n\n#Rumah123 #HargaRumah",
+              "image_text": "Harga properti naik 0,58 persen kuartal III 2026",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun.",
+                  "model_factual": false,
+                  "treated_as_factual": true,
+                  "verdict": "reclassified_as_factual",
+                  "reasons": [
+                    "asserts change ['naik', 'turun']"
+                  ]
+                },
+                {
+                  "sentence": "Menurut CNN Indonesia, harga properti residensial di pasar primer naik 0,58 persen pada kuartal III 2026 secara tahunan.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy)."
+                },
+                {
+                  "sentence": "Namun, penjualan hunian turun 8,43 persen, terutama penjualan rumah tipe besar yang turun 10,78 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_not_found_in_facts",
+                  "quote": "penjualan hunian justru anjlok 8,43 persen pada kuartal III 2026 dibandingkan periode yang sama tahun lalu. Penjualan rumah tipe besar merosot 10,78 persen."
+                },
+                {
+                  "sentence": "Suku bunga KPR tercatat stabil di level 7,47 persen pada kuartal III 2026.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "suku bunga KPR tercatat relatif stabil di level 7,47 persen pada kuartal III 2026."
+                },
+                {
+                  "sentence": "Meski begitu, nilai KPR naik 4,80 persen secara tahunan.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
+                },
+                {
+                  "sentence": "Kamu bisa santai lihat-lihat rumah di Rumah123 dulu.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana menurut kamu kondisi pasar rumah sekarang?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[mislabelled_claim] Sentence \"Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun.\" was labelled non-factual but it asserts change ['naik', 'turun']. It is a factual claim and must be supported by the verified facts, or removed.",
+                "[unverifiable_claim] Claim \"Namun, penjualan hunian turun 8,43 persen, terutama penjualan rumah tipe besar yang turun 10,78 persen.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failures": [
+                "[mislabelled_claim] Sentence \"Kamu mungkin sering lihat harga rumah naik pelan tapi penjualan turun.\" was labelled non-factual but it asserts change ['naik', 'turun']. It is a factual claim and must be supported by the verified facts, or removed.",
+                "[unverifiable_claim] Claim \"Namun, penjualan hunian turun 8,43 persen, terutama penjualan rumah tipe besar yang turun 10,78 persen.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failure_rules": [
+                "mislabelled_claim",
+                "unverifiable_claim"
+              ]
+            },
+            {
+              "attempt": 3,
+              "caption": "Kadang kamu melihat harga rumah naik pelan sementara masih menabung. Menurut CNN Indonesia, harga properti residensial di pasar primer naik 0,58 persen pada kuartal III 2026 secara tahunan. Suku bunga KPR stabil di level 7,47 persen. Nilai KPR tumbuh 4,80 persen secara tahunan. Kamu bisa santai lihat-lihat rumah di Rumah123 dulu.\n\nBagaimana menurut kamu kondisi pasar rumah sekarang?\n\n#Rumah123 #HargaRumah",
+              "image_text": "Harga properti naik 0,58 persen kuartal III 2026",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Kadang kamu melihat harga rumah naik pelan sementara masih menabung.",
+                  "model_factual": false,
+                  "treated_as_factual": true,
+                  "verdict": "reclassified_as_factual",
+                  "reasons": [
+                    "asserts change ['naik']"
+                  ]
+                },
+                {
+                  "sentence": "Menurut CNN Indonesia, harga properti residensial di pasar primer naik 0,58 persen pada kuartal III 2026 secara tahunan.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy)."
+                },
+                {
+                  "sentence": "Suku bunga KPR stabil di level 7,47 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "suku bunga KPR tercatat relatif stabil di level 7,47 persen pada kuartal III 2026."
+                },
+                {
+                  "sentence": "Nilai KPR tumbuh 4,80 persen secara tahunan.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
+                },
+                {
+                  "sentence": "Kamu bisa santai lihat-lihat rumah di Rumah123 dulu.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana menurut kamu kondisi pasar rumah sekarang?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[mislabelled_claim] Sentence \"Kadang kamu melihat harga rumah naik pelan sementara masih menabung.\" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed."
+              ],
+              "failures": [
+                "[mislabelled_claim] Sentence \"Kadang kamu melihat harga rumah naik pelan sementara masih menabung.\" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed."
+              ],
+              "failure_rules": [
+                "mislabelled_claim"
+              ]
+            }
+          ]
+        },
+        {
+          "variant_index": 1,
+          "passed": true,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Pernah coba bandingkan jumlah cicilan KPR setiap bulan? Harga rumah di pasar primer naik tipis 0,58 persen tahun ini, tapi penjualan rumah justru turun sampai 8,43 persen, lapor CNN Indonesia.\nPenurunan paling tajam terjadi pada rumah tipe besar, turun 10,78 persen.\nMeski begitu, suku bunga KPR stabil di angka 7,47 persen dan nilai KPR justru tumbuh 4,80 persen.\nKamu bisa santai lihat-lihat pilihan rumah di Rumah123.\nBagaimana kamu melihat peluang beli rumah sekarang?\n\n#Rumah123 #HargaRumah",
+              "image_text": "Harga Rumah Primer Naik 0,58 Persen",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Pernah coba bandingkan jumlah cicilan KPR setiap bulan?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Harga rumah di pasar primer naik tipis 0,58 persen tahun ini, tapi penjualan rumah justru turun sampai 8,43 persen, lapor CNN Indonesia.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_not_found_in_facts",
+                  "quote": "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy).penjualan huni"
+                },
+                {
+                  "sentence": "Penurunan paling tajam terjadi pada rumah tipe besar, turun 10,78 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Penjualan rumah tipe besar merosot 10,78 persen."
+                },
+                {
+                  "sentence": "Meski begitu, suku bunga KPR stabil di angka 7,47 persen dan nilai KPR justru tumbuh 4,80 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_not_found_in_facts",
+                  "quote": "suku bunga KPR tercatat relatif stabil di level 7,47 persen pada kuartal III 2026.nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
+                },
+                {
+                  "sentence": "Kamu bisa santai lihat-lihat pilihan rumah di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana kamu melihat peluang beli rumah sekarang?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[unverifiable_claim] Claim \"Harga rumah di pasar primer naik tipis 0,58 persen tahun ini, tapi penjualan rumah justru turun sampai 8,43 persen, lapor CNN Indonesia.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.",
+                "[unverifiable_claim] Claim \"Meski begitu, suku bunga KPR stabil di angka 7,47 persen dan nilai KPR justru tumbuh 4,80 persen.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failures": [
+                "[unverifiable_claim] Claim \"Harga rumah di pasar primer naik tipis 0,58 persen tahun ini, tapi penjualan rumah justru turun sampai 8,43 persen, lapor CNN Indonesia.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it.",
+                "[unverifiable_claim] Claim \"Meski begitu, suku bunga KPR stabil di angka 7,47 persen dan nilai KPR justru tumbuh 4,80 persen.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failure_rules": [
+                "unverifiable_claim"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Pernah coba bandingkan jumlah rumah yang terjual setiap bulan? Penjualan hunian menurun 8,43 persen pada kuartal III 2026, menurut CNN Indonesia.\nPenurunan paling tajam terjadi pada rumah tipe besar yang turun 10,78 persen.\nHarga properti residensial di pasar primer naik 0,58 persen.\nKamu bisa santai lihat-lihat pilihan rumah di Rumah123.\nBagaimana kamu melihat peluang beli rumah sekarang?\n\n#Rumah123 #HargaRumah",
+              "image_text": "Harga properti naik 0,58 persen kuartal III 2026",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Pernah coba bandingkan jumlah rumah yang terjual setiap bulan?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Penjualan hunian menurun 8,43 persen pada kuartal III 2026, menurut CNN Indonesia.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "penjualan hunian justru anjlok 8,43 persen pada kuartal III 2026 dibandingkan periode yang sama tahun lalu."
+                },
+                {
+                  "sentence": "Penurunan paling tajam terjadi pada rumah tipe besar yang turun 10,78 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Penjualan rumah tipe besar merosot 10,78 persen."
+                },
+                {
+                  "sentence": "Harga properti residensial di pasar primer naik 0,58 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy)."
+                },
+                {
+                  "sentence": "Kamu bisa santai lihat-lihat pilihan rumah di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana kamu melihat peluang beli rumah sekarang?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        },
+        {
+          "variant_index": 2,
+          "passed": true,
+          "first_attempt_passed": true,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Kadang kamu merasa proses punya rumah itu lambat dan rumit. Itu hal yang biasa.\n\nMenurut CNN Indonesia, harga rumah di pasar primer naik 0,58 persen pada kuartal III 2026 dibanding tahun lalu. Tapi penjualan hunian turun 8,43 persen di periode yang sama.\n\nSuku bunga KPR tidak berubah, tetap di 7,47 persen. Nilai KPR justru meningkat 4,80 persen secara tahunan.\n\nSantai saja, kamu bisa mulai melihat-lihat dengan tenang di Rumah123.\n\nMenurut kamu, apa yang paling menantang saat memulai cari rumah?\n\n#Rumah123 #HargaRumah",
+              "image_text": "Harga properti naik 0,58 persen kuartal III 2026",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Kadang kamu merasa proses punya rumah itu lambat dan rumit.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Itu hal yang biasa.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Menurut CNN Indonesia, harga rumah di pasar primer naik 0,58 persen pada kuartal III 2026 dibanding tahun lalu.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy)."
+                },
+                {
+                  "sentence": "Tapi penjualan hunian turun 8,43 persen di periode yang sama.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "penjualan hunian justru anjlok 8,43 persen pada kuartal III 2026 dibandingkan periode yang sama tahun lalu."
+                },
+                {
+                  "sentence": "Suku bunga KPR tidak berubah, tetap di 7,47 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "suku bunga KPR tercatat relatif stabil di level 7,47 persen pada kuartal III 2026."
+                },
+                {
+                  "sentence": "Nilai KPR justru meningkat 4,80 persen secara tahunan.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
+                },
+                {
+                  "sentence": "Santai saja, kamu bisa mulai melihat-lihat dengan tenang di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Menurut kamu, apa yang paling menantang saat memulai cari rumah?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        }
+      ],
+      "variants_passing": 2,
+      "draft": "drafts/2026-W45/01-survei-bi-harga-rumah-naik-tipis-penjualan-anjlo.md"
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8736334/190-ribuan-rumah-subsidi-terjual-buruh-pekerja-swasta-jadi-pembeli-terbanyak",
+      "title": "190 Ribuan Rumah Subsidi Terjual, Buruh-Pekerja Swasta Jadi Pembeli Terbanyak",
+      "source": "detikProperti",
+      "facts_verified": 6,
+      "facts_dropped": 0,
+      "variants": [
+        {
+          "variant_index": 0,
+          "passed": false,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Kadang kamu hanya bisa menonton harga rumah naik sementara masih menabung. Menurut detikProperti, ada kabar baik lewat KPR subsidi atau FLPP yang membantu lebih dari 194.000 rumah sudah terjual.\nMayoritas penerima adalah buruh dan pekerja swasta, sekitar 67,97 persen.\nKeuntungannya, bunga tetap 5 persen, tanpa PPN & BPHTB, serta DP kecil atau tanpa DP.\nCoba lihat-lihat di Rumah123 saja, santai dan tanpa tekanan.\nApa menurut kamu FLPP bisa jadi jalan untuk mulai membeli rumah?\n\n#Rumah123 #KPR",
+              "image_text": "Keuntungan KPR Subsidi dan FLPP Terbaru",
+              "validation_failures": [
+                "[ungrounded_number] These numbers are not in the verified facts: ['194.000']. Remove them or use only figures the facts state."
+              ],
+              "claimcheck_failures": [],
+              "claimcheck_detail": [],
+              "claimcheck_skipped": "validation failed first",
+              "failures": [
+                "[ungrounded_number] These numbers are not in the verified facts: ['194.000']. Remove them or use only figures the facts state."
+              ],
+              "failure_rules": [
+                "ungrounded_number"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Kadang kamu hanya bisa menonton harga rumah naik sementara masih menabung. Menurut detikProperti, ada kabar baik lewat KPR subsidi atau FLPP yang sudah menyalurkan lebih dari 194.360 unit rumah.\nMayoritas penerima adalah buruh dan pekerja swasta, sekitar 67,97 persen.\nKeuntungannya, bunga tetap 5 persen, tanpa PPN & BPHTB, serta DP kecil atau tanpa DP.\nCoba lihat-lihat di Rumah123 saja, santai dan tanpa tekanan.\nApa menurut kamu FLPP bisa jadi jalan untuk mulai membeli rumah?\n\n#Rumah123 #KPR",
+              "image_text": "194.360 Rumah Terjual dengan Skema FLPP",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Kadang kamu hanya bisa menonton harga rumah naik sementara masih menabung.",
+                  "model_factual": false,
+                  "treated_as_factual": true,
+                  "verdict": "reclassified_as_factual",
+                  "reasons": [
+                    "asserts change ['naik']"
+                  ]
+                },
+                {
+                  "sentence": "Menurut detikProperti, ada kabar baik lewat KPR subsidi atau FLPP yang sudah menyalurkan lebih dari 194.360 unit rumah.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "BP Tapera melaporkan 194.360 rumah terjual dengan skema pembelian KPR subsidi atau Fasilitas Likuiditas Pembiayaan Perumahan (FLPP)."
+                },
+                {
+                  "sentence": "Mayoritas penerima adalah buruh dan pekerja swasta, sekitar 67,97 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Mayoritas adalah buruh dan pekerja swasta sekitar 67.97 persen"
+                },
+                {
+                  "sentence": "Keuntungannya, bunga tetap 5 persen, tanpa PPN & BPHTB, serta DP kecil atau tanpa DP.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Keuntungan KPR subsidi atau FLPP ini adalah bunganya tetap 5 persen bukan floating sehingga mempermudah ketika cicilan. Lalu, tidak dibebankan pajak seperti PPN"
+                },
+                {
+                  "sentence": "Coba lihat-lihat di Rumah123 saja, santai dan tanpa tekanan.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Apa menurut kamu FLPP bisa jadi jalan untuk mulai membeli rumah?",
+                  "model_factual": false,
+                  "treated_as_factual": true,
+                  "verdict": "reclassified_as_factual",
+                  "reasons": [
+                    "names ['flpp']"
+                  ]
+                }
+              ],
+              "claimcheck_failures": [
+                "[mislabelled_claim] Sentence \"Kadang kamu hanya bisa menonton harga rumah naik sementara masih menabung.\" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.",
+                "[mislabelled_claim] Sentence \"Apa menurut kamu FLPP bisa jadi jalan untuk mulai membeli rumah?\" was labelled non-factual but it names ['flpp']. It is a factual claim and must be supported by the verified facts, or removed."
+              ],
+              "failures": [
+                "[mislabelled_claim] Sentence \"Kadang kamu hanya bisa menonton harga rumah naik sementara masih menabung.\" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.",
+                "[mislabelled_claim] Sentence \"Apa menurut kamu FLPP bisa jadi jalan untuk mulai membeli rumah?\" was labelled non-factual but it names ['flpp']. It is a factual claim and must be supported by the verified facts, or removed."
+              ],
+              "failure_rules": [
+                "mislabelled_claim"
+              ]
+            },
+            {
+              "attempt": 3,
+              "caption": "Kadang kamu merasa belum siap karena harga rumah memang berat. Menurut detikProperti, FLPP sudah berhasil menjual 194.360 rumah dengan bunga tetap 5 persen, tanpa PPN dan BPHTB. Mayoritas penerima manfaat adalah buruh dan pekerja swasta sekitar 67,97 persen. Ada peluang dengan DP kecil atau bahkan tanpa DP, rumah maksimal Rp 300 juta.\nLihat-lihat saja di Rumah123 dengan santai.\nBagaimana pandanganmu soal KPR subsidi sekarang?\n\n#Rumah123 #KPR",
+              "image_text": "194.360 rumah terjual lewat FLPP",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Kadang kamu merasa belum siap karena harga rumah memang berat.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Menurut detikProperti, FLPP sudah berhasil menjual 194.360 rumah dengan bunga tetap 5 persen, tanpa PPN dan BPHTB.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "5"
+                  ]
+                },
+                {
+                  "sentence": "Mayoritas penerima manfaat adalah buruh dan pekerja swasta sekitar 67,97 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Mayoritas adalah buruh dan pekerja swasta sekitar 67.97 persen"
+                },
+                {
+                  "sentence": "Ada peluang dengan DP kecil atau bahkan tanpa DP, rumah maksimal Rp 300 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Keuntungan KPR subsidi atau FLPP ini adalah bunganya tetap 5 persen bukan floating sehingga mempermudah ketika cicilan. Lalu, tidak dibebankan pajak seperti PPN"
+                },
+                {
+                  "sentence": "Lihat-lihat saja di Rumah123 dengan santai.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana pandanganmu soal KPR subsidi sekarang?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[unsupported_figure] Claim \"Menurut detikProperti, FLPP sudah berhasil menjual 194.360 rumah dengan bunga tetap 5 persen, tanpa PPN dan BPHTB.\" cites figures ['5'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failures": [
+                "[unsupported_figure] Claim \"Menurut detikProperti, FLPP sudah berhasil menjual 194.360 rumah dengan bunga tetap 5 persen, tanpa PPN dan BPHTB.\" cites figures ['5'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failure_rules": [
+                "unsupported_figure"
+              ]
+            }
+          ]
+        },
+        {
+          "variant_index": 1,
+          "passed": true,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Pernah membandingkan cicilan rumah dan pengeluaran bulanan lain? KPR subsidi seperti FLPP bisa jadi pilihan dengan bunga tetap 5 persen.\n\nMenurut detikProperti, 194.360 rumah sudah terjual dengan skema ini. Sebagian besar penerima manfaat adalah buruh dan pekerja swasta, sekitar 67,97 persen. Harga rumah maksimal Rp 300 juta dengan uang muka kecil, bahkan bisa tanpa DP.\n\nRumah123 bisa jadi tempat kamu melihat opsi ini dengan tenang.\n\nBagaimana pengalamanmu dengan KPR subsidi?\n\n#Rumah123 #KPR",
+              "image_text": "194.360 rumah terjual lewat KPR subsidi",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Pernah membandingkan cicilan rumah dan pengeluaran bulanan lain?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "KPR subsidi seperti FLPP bisa jadi pilihan dengan bunga tetap 5 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Keuntungan KPR subsidi atau FLPP ini adalah bunganya tetap 5 persen bukan floating sehingga mempermudah ketika cicilan."
+                },
+                {
+                  "sentence": "Menurut detikProperti, 194.360 rumah sudah terjual dengan skema ini.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "BP Tapera melaporkan 194.360 rumah terjual dengan skema pembelian KPR subsidi atau Fasilitas Likuiditas Pembiayaan Perumahan (FLPP)."
+                },
+                {
+                  "sentence": "Sebagian besar penerima manfaat adalah buruh dan pekerja swasta, sekitar 67,97 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Mayoritas adalah buruh dan pekerja swasta sekitar 67.97 persen"
+                },
+                {
+                  "sentence": "Harga rumah maksimal Rp 300 juta dengan uang muka kecil, bahkan bisa tanpa DP.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_not_found_in_facts",
+                  "quote": "Harga rumahnya juga tidak ada yang lebih dari Rp 300 juta\"; \"Uang mukanya juga kecil bisa 1 persen atau tidak perlu membayar DP."
+                },
+                {
+                  "sentence": "Rumah123 bisa jadi tempat kamu melihat opsi ini dengan tenang.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana pengalamanmu dengan KPR subsidi?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[unverifiable_claim] Claim \"Harga rumah maksimal Rp 300 juta dengan uang muka kecil, bahkan bisa tanpa DP.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failures": [
+                "[unverifiable_claim] Claim \"Harga rumah maksimal Rp 300 juta dengan uang muka kecil, bahkan bisa tanpa DP.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failure_rules": [
+                "unverifiable_claim"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Pernah membandingkan cicilan rumah dan pengeluaran bulanan lain? KPR subsidi seperti FLPP bisa jadi pilihan dengan bunga tetap 5 persen.\n\nMenurut detikProperti, 194.360 rumah sudah terjual dengan skema ini. Sebagian besar penerima manfaat adalah buruh dan pekerja swasta, sekitar 67,97 persen.\n\nRumah123 bisa jadi tempat kamu melihat opsi ini dengan tenang.\n\nBagaimana pengalamanmu dengan KPR subsidi?\n\n#Rumah123 #KPR",
+              "image_text": "194.360 Rumah Terjual dengan KPR Subsidi",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Pernah membandingkan cicilan rumah dan pengeluaran bulanan lain?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "KPR subsidi seperti FLPP bisa jadi pilihan dengan bunga tetap 5 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Keuntungan KPR subsidi atau FLPP ini adalah bunganya tetap 5 persen bukan floating sehingga mempermudah ketika cicilan."
+                },
+                {
+                  "sentence": "Menurut detikProperti, 194.360 rumah sudah terjual dengan skema ini.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "BP Tapera melaporkan 194.360 rumah terjual dengan skema pembelian KPR subsidi atau Fasilitas Likuiditas Pembiayaan Perumahan (FLPP)."
+                },
+                {
+                  "sentence": "Sebagian besar penerima manfaat adalah buruh dan pekerja swasta, sekitar 67,97 persen.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Mayoritas adalah buruh dan pekerja swasta sekitar 67.97 persen"
+                },
+                {
+                  "sentence": "Rumah123 bisa jadi tempat kamu melihat opsi ini dengan tenang.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Bagaimana pengalamanmu dengan KPR subsidi?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        },
+        {
+          "variant_index": 2,
+          "passed": true,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Nggak apa-apa kok jika kamu merasa masih awal dan belum siap beli rumah.\nFLPP atau KPR subsidi sudah membantu terjual 194.360 rumah, mayoritas untuk buruh dan pekerja swasta menurut detikProperti.\nSkema ini bunganya tetap 5 persen, uang muka kecil atau tanpa DP, dan rumah maksimal harga Rp 300 juta.\nKalau ingin tahu lebih lanjut, coba lihat-lihat aja di Rumah123 dengan tenang.\nGimana menurut kamu, apa yang paling penting dari skema KPR subsidi buat kamu?\n\n#Rumah123 #KPR",
+              "image_text": "194.360 Rumah Terjual Lewat KPR Subsidi",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Nggak apa-apa kok jika kamu merasa masih awal dan belum siap beli rumah.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "FLPP atau KPR subsidi sudah membantu terjual 194.360 rumah, mayoritas untuk buruh dan pekerja swasta menurut detikProperti.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_not_found_in_facts",
+                  "quote": "BP Tapera melaporkan 194.360 rumah terjual dengan skema pembelian KPR subsidi atau Fasilitas Likuiditas Pembiayaan Perumahan (FLPP). Mayoritas adalah buruh dan "
+                },
+                {
+                  "sentence": "Skema ini bunganya tetap 5 persen, uang muka kecil atau tanpa DP, dan rumah maksimal harga Rp 300 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Keuntungan KPR subsidi atau FLPP ini adalah bunganya tetap 5 persen bukan floating sehingga mempermudah ketika cicilan. Lalu, tidak dibebankan pajak seperti PPN"
+                },
+                {
+                  "sentence": "Kalau ingin tahu lebih lanjut, coba lihat-lihat aja di Rumah123 dengan tenang.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Gimana menurut kamu, apa yang paling penting dari skema KPR subsidi buat kamu?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[unverifiable_claim] Claim \"FLPP atau KPR subsidi sudah membantu terjual 194.360 rumah, mayoritas untuk buruh dan pekerja swasta menurut detikProperti.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failures": [
+                "[unverifiable_claim] Claim \"FLPP atau KPR subsidi sudah membantu terjual 194.360 rumah, mayoritas untuk buruh dan pekerja swasta menurut detikProperti.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+              ],
+              "failure_rules": [
+                "unverifiable_claim"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Nggak apa-apa kok jika kamu merasa masih awal dan belum siap beli rumah.\nKPR subsidi atau FLPP menawarkan bunga tetap 5 persen dan uang muka yang kecil atau tanpa DP, dengan harga rumah maksimal Rp 300 juta.\nMenurut detikProperti, 194.360 rumah sudah terjual dengan skema ini.\nKalau ingin tahu lebih lanjut, coba lihat-lihat aja di Rumah123 dengan tenang.\nGimana menurut kamu, apa yang paling penting dari skema KPR subsidi buat kamu?\n\n#Rumah123 #KPR",
+              "image_text": "194.360 rumah terjual lewat KPR subsidi",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Nggak apa-apa kok jika kamu merasa masih awal dan belum siap beli rumah.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "KPR subsidi atau FLPP menawarkan bunga tetap 5 persen dan uang muka yang kecil atau tanpa DP, dengan harga rumah maksimal Rp 300 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Keuntungan KPR subsidi atau FLPP ini adalah bunganya tetap 5 persen bukan floating sehingga mempermudah ketika cicilan. Lalu, tidak dibebankan pajak seperti PPN"
+                },
+                {
+                  "sentence": "Menurut detikProperti, 194.360 rumah sudah terjual dengan skema ini.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "BP Tapera melaporkan 194.360 rumah terjual dengan skema pembelian KPR subsidi atau Fasilitas Likuiditas Pembiayaan Perumahan (FLPP)."
+                },
+                {
+                  "sentence": "Kalau ingin tahu lebih lanjut, coba lihat-lihat aja di Rumah123 dengan tenang.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Gimana menurut kamu, apa yang paling penting dari skema KPR subsidi buat kamu?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        }
+      ],
+      "variants_passing": 2,
+      "draft": "drafts/2026-W45/02-190-ribuan-rumah-subsidi-terjual-buruh-pekerja-s.md"
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8738846/fakta-rusun-subsidi-manggarai-yang-belum-dibangun-tapi-sudah-diburu-1-500-orang",
+      "title": "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+      "source": "detikProperti",
+      "facts_verified": 5,
+      "facts_dropped": 1,
+      "variants": [
+        {
+          "variant_index": 0,
+          "passed": true,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Melihat harga rumah terus naik itu bikin kamu merasa berat menabung, ya?\n\nRusun subsidi Manggarai mulai dibangun Januari 2027 dan selesai Agustus 2028, lapor detikProperti.\nHanya ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai dari Rp 294 juta sampai Rp 630 juta.\nNUP ditargetkan dibuka tahun 2026, jadi kamu bisa mulai persiapan dulu.\nCoba lihat-lihat di Rumah123 santai saja.\nKamu tertarik tipe mana?\n\n#Rumah123 #RusunSubsidi",
+              "image_text": "Rusun subsidi Manggarai mulai dibangun 2027",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Melihat harga rumah terus naik itu bikin kamu merasa berat menabung, ya?",
+                  "model_factual": false,
+                  "treated_as_factual": true,
+                  "verdict": "reclassified_as_factual",
+                  "reasons": [
+                    "asserts change ['naik']"
+                  ]
+                },
+                {
+                  "sentence": "Rusun subsidi Manggarai mulai dibangun Januari 2027 dan selesai Agustus 2028, lapor detikProperti.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembangunan fisik ditargetkan mulai Januari 2027 dengan estimasi penyelesaian pada Agustus 2028"
+                },
+                {
+                  "sentence": "Hanya ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai dari Rp 294 juta sampai Rp 630 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "294",
+                    "630"
+                  ]
+                },
+                {
+                  "sentence": "Hanya ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai dari Rp 294 juta sampai Rp 630 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Tipe terkecil 21 meter persegi dijual mulai dari Rp 294 juta per unit dan unit terbesar 45 meter persegi Rp 630 juta per unit"
+                },
+                {
+                  "sentence": "NUP ditargetkan dibuka tahun 2026, jadi kamu bisa mulai persiapan dulu.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "2026"
+                  ]
+                },
+                {
+                  "sentence": "Coba lihat-lihat di Rumah123 santai saja.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Kamu tertarik tipe mana?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[mislabelled_claim] Sentence \"Melihat harga rumah terus naik itu bikin kamu merasa berat menabung, ya?\" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.",
+                "[unsupported_figure] Claim \"Hanya ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai dari Rp 294 juta sampai Rp 630 juta.\" cites figures ['294', '630'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"NUP ditargetkan dibuka tahun 2026, jadi kamu bisa mulai persiapan dulu.\" cites figures ['2026'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failures": [
+                "[mislabelled_claim] Sentence \"Melihat harga rumah terus naik itu bikin kamu merasa berat menabung, ya?\" was labelled non-factual but it asserts change ['naik']. It is a factual claim and must be supported by the verified facts, or removed.",
+                "[unsupported_figure] Claim \"Hanya ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai dari Rp 294 juta sampai Rp 630 juta.\" cites figures ['294', '630'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"NUP ditargetkan dibuka tahun 2026, jadi kamu bisa mulai persiapan dulu.\" cites figures ['2026'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failure_rules": [
+                "mislabelled_claim",
+                "unsupported_figure"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Memantau harga rumah sambil terus menabung kadang bikin kamu bertanya-tanya, kapan bisa mulai punya sendiri?\n\nRusun subsidi Manggarai akan mulai dibangun Januari 2027 dan selesai Agustus 2028, lapor detikProperti. Hanya tersedia dua tipe, 21 dan 45 meter persegi. Harga tipe 21 meter persegi mulai dari Rp 294 juta dan tipe 45 meter persegi Rp 630 juta.\n\nPembukaan Nomor Urut Pemesanan ditargetkan tahun ini. Kamu bisa coba lihat-lihat di Rumah123 dengan santai.\n\nTipe mana yang kamu senangi?\n\n#Rumah123 #RusunSubsidi",
+              "image_text": "Rusun Subsidi Manggarai Mulai Dibangun 2027",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Memantau harga rumah sambil terus menabung kadang bikin kamu bertanya-tanya, kapan bisa mulai punya sendiri?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Rusun subsidi Manggarai akan mulai dibangun Januari 2027 dan selesai Agustus 2028, lapor detikProperti.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembangunan fisik ditargetkan mulai Januari 2027 dengan estimasi penyelesaian pada Agustus 2028"
+                },
+                {
+                  "sentence": "Hanya tersedia dua tipe, 21 dan 45 meter persegi.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Hanya akan 2 tipe, yakni 21 dan 45"
+                },
+                {
+                  "sentence": "Harga tipe 21 meter persegi mulai dari Rp 294 juta dan tipe 45 meter persegi Rp 630 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Tipe terkecil 21 meter persegi dijual mulai dari Rp 294 juta per unit dan unit terbesar 45 meter persegi Rp 630 juta per unit"
+                },
+                {
+                  "sentence": "Pembukaan Nomor Urut Pemesanan ditargetkan tahun ini.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembukaan NUP ditargetkan dapat dilakukan pada tahun ini"
+                },
+                {
+                  "sentence": "Kamu bisa coba lihat-lihat di Rumah123 dengan santai.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Tipe mana yang kamu senangi?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        },
+        {
+          "variant_index": 1,
+          "passed": true,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Sering merasa penghasilan bulanan kamu tidak cukup untuk beli rumah? Ada kabar baru dari DetikProperti soal rusun subsidi Manggarai. Rusun ini akan dibangun mulai Januari 2027 di lahan 6.925 meter persegi. Unitnya cuma dua tipe, 21 meter persegi dengan harga mulai Rp 294 juta dan 45 meter persegi mulai Rp 630 juta. Nomor Urut Pemesanan dibuka tahun 2026. Kamu bisa mulai lihat-lihat dengan santai di Rumah123. Gimana menurut kamu?\n\n#Rumah123 #RusunSubsidi",
+              "image_text": "Rusun Subsidi Manggarai Mulai Rp 294 Juta",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Sering merasa penghasilan bulanan kamu tidak cukup untuk beli rumah?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Ada kabar baru dari DetikProperti soal rusun subsidi Manggarai.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Rusun ini akan dibangun mulai Januari 2027 di lahan 6.925 meter persegi.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "6.925"
+                  ]
+                },
+                {
+                  "sentence": "Unitnya cuma dua tipe, 21 meter persegi dengan harga mulai Rp 294 juta dan 45 meter persegi mulai Rp 630 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "294",
+                    "630"
+                  ]
+                },
+                {
+                  "sentence": "Nomor Urut Pemesanan dibuka tahun 2026.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "2026"
+                  ]
+                },
+                {
+                  "sentence": "Kamu bisa mulai lihat-lihat dengan santai di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Gimana menurut kamu?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[unsupported_figure] Claim \"Rusun ini akan dibangun mulai Januari 2027 di lahan 6.925 meter persegi.\" cites figures ['6.925'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Unitnya cuma dua tipe, 21 meter persegi dengan harga mulai Rp 294 juta dan 45 meter persegi mulai Rp 630 juta.\" cites figures ['294', '630'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Nomor Urut Pemesanan dibuka tahun 2026.\" cites figures ['2026'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failures": [
+                "[unsupported_figure] Claim \"Rusun ini akan dibangun mulai Januari 2027 di lahan 6.925 meter persegi.\" cites figures ['6.925'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Unitnya cuma dua tipe, 21 meter persegi dengan harga mulai Rp 294 juta dan 45 meter persegi mulai Rp 630 juta.\" cites figures ['294', '630'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Nomor Urut Pemesanan dibuka tahun 2026.\" cites figures ['2026'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failure_rules": [
+                "unsupported_figure"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Sering merasa penghasilan bulanan kamu tidak cukup untuk beli rumah? Ada kabar baru dari detikProperti soal rusun subsidi Manggarai. Pembangunan akan mulai Januari 2027 dan selesai Agustus 2028. Lahan untuk rusun ini seluas 6.925 meter persegi. Unit hanya ada dua tipe, 21 dan 45 meter persegi. Harga mulai dari Rp 294 juta untuk tipe terkecil dan Rp 630 juta untuk tipe terbesar. Nomor Urut Pemesanan ditargetkan tahun ini. Kamu bisa mulai lihat-lihat dengan santai di Rumah123. Gimana menurut kamu?\n\n#Rumah123 #RusunSubsidi",
+              "image_text": "Rusun Subsidi Manggarai Mulai 2027",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Sering merasa penghasilan bulanan kamu tidak cukup untuk beli rumah?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Ada kabar baru dari detikProperti soal rusun subsidi Manggarai.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Pembangunan akan mulai Januari 2027 dan selesai Agustus 2028.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembangunan fisik ditargetkan mulai Januari 2027 dengan estimasi penyelesaian pada Agustus 2028"
+                },
+                {
+                  "sentence": "Lahan untuk rusun ini seluas 6.925 meter persegi.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Untuk lahan Blok G seluas 6.925 meter persegi, proses pembersihan lahan telah selesai"
+                },
+                {
+                  "sentence": "Unit hanya ada dua tipe, 21 dan 45 meter persegi.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Hanya akan 2 tipe, yakni 21 dan 45"
+                },
+                {
+                  "sentence": "Harga mulai dari Rp 294 juta untuk tipe terkecil dan Rp 630 juta untuk tipe terbesar.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Tipe terkecil 21 meter persegi dijual mulai dari Rp 294 juta per unit dan unit terbesar 45 meter persegi Rp 630 juta per unit"
+                },
+                {
+                  "sentence": "Nomor Urut Pemesanan ditargetkan tahun ini.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembukaan NUP ditargetkan dapat dilakukan pada tahun ini"
+                },
+                {
+                  "sentence": "Kamu bisa mulai lihat-lihat dengan santai di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Gimana menurut kamu?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        },
+        {
+          "variant_index": 2,
+          "passed": true,
+          "first_attempt_passed": false,
+          "attempts": [
+            {
+              "attempt": 1,
+              "caption": "Membeli rumah pertama memang terasa berat. Tapi ada kabar yang bisa bikin kamu lega.\n\nProyek rusun subsidi Manggarai mulai dibangun Januari 2027 dengan lahan 6.925 meter persegi, lapor detikProperti. Ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai Rp 294 juta. Nomor Urut Pemesanan direncanakan dibuka tahun 2026.\n\nKamu bisa mulai tenang dan lihat-lihat di Rumah123. Apa tipe rumah impian kamu?\n\n#Rumah123 #RusunSubsidi",
+              "image_text": "Rusun subsidi Manggarai mulai dibangun 2027",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Membeli rumah pertama memang terasa berat.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Tapi ada kabar yang bisa bikin kamu lega.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Proyek rusun subsidi Manggarai mulai dibangun Januari 2027 dengan lahan 6.925 meter persegi, lapor detikProperti.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "6.925"
+                  ]
+                },
+                {
+                  "sentence": "Ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai Rp 294 juta.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "294"
+                  ]
+                },
+                {
+                  "sentence": "Nomor Urut Pemesanan direncanakan dibuka tahun 2026.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "figures_not_in_quote",
+                  "missing_figures": [
+                    "2026"
+                  ]
+                },
+                {
+                  "sentence": "Kamu bisa mulai tenang dan lihat-lihat di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Apa tipe rumah impian kamu?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [
+                "[unsupported_figure] Claim \"Proyek rusun subsidi Manggarai mulai dibangun Januari 2027 dengan lahan 6.925 meter persegi, lapor detikProperti.\" cites figures ['6.925'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai Rp 294 juta.\" cites figures ['294'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Nomor Urut Pemesanan direncanakan dibuka tahun 2026.\" cites figures ['2026'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failures": [
+                "[unsupported_figure] Claim \"Proyek rusun subsidi Manggarai mulai dibangun Januari 2027 dengan lahan 6.925 meter persegi, lapor detikProperti.\" cites figures ['6.925'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Ada dua tipe unit, 21 dan 45 meter persegi, dengan harga mulai Rp 294 juta.\" cites figures ['294'] that do not appear in its own supporting quote. Use only figures the quote states.",
+                "[unsupported_figure] Claim \"Nomor Urut Pemesanan direncanakan dibuka tahun 2026.\" cites figures ['2026'] that do not appear in its own supporting quote. Use only figures the quote states."
+              ],
+              "failure_rules": [
+                "unsupported_figure"
+              ]
+            },
+            {
+              "attempt": 2,
+              "caption": "Membeli rumah pertama memang terasa berat. Tapi ada kabar yang bisa bikin kamu lega.\n\nPembangunan fisik rusun subsidi Manggarai ditargetkan mulai Januari 2027 dan selesai Agustus 2028, lapor detikProperti. Hanya ada dua tipe unit, 21 dan 45 meter persegi. Nomor Urut Pemesanan direncanakan dibuka pada tahun ini.\n\nKamu bisa mulai tenang dan lihat-lihat di Rumah123. Apa tipe rumah impian kamu?\n\n#Rumah123 #RusunSubsidi",
+              "image_text": "Pembangunan rusun subsidi Manggarai mulai 2027",
+              "validation_failures": [],
+              "claimcheck_detail": [
+                {
+                  "sentence": "Membeli rumah pertama memang terasa berat.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Tapi ada kabar yang bisa bikin kamu lega.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Pembangunan fisik rusun subsidi Manggarai ditargetkan mulai Januari 2027 dan selesai Agustus 2028, lapor detikProperti.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembangunan fisik ditargetkan mulai Januari 2027 dengan estimasi penyelesaian pada Agustus 2028"
+                },
+                {
+                  "sentence": "Hanya ada dua tipe unit, 21 dan 45 meter persegi.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "Hanya akan 2 tipe, yakni 21 dan 45"
+                },
+                {
+                  "sentence": "Nomor Urut Pemesanan direncanakan dibuka pada tahun ini.",
+                  "model_factual": true,
+                  "treated_as_factual": true,
+                  "verdict": "quote_and_figures_verified",
+                  "quote": "pembukaan NUP ditargetkan dapat dilakukan pada tahun ini"
+                },
+                {
+                  "sentence": "Kamu bisa mulai tenang dan lihat-lihat di Rumah123.",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                },
+                {
+                  "sentence": "Apa tipe rumah impian kamu?",
+                  "model_factual": false,
+                  "treated_as_factual": false,
+                  "verdict": "non_factual"
+                }
+              ],
+              "claimcheck_failures": [],
+              "failures": [],
+              "failure_rules": []
+            }
+          ]
+        }
+      ],
+      "variants_passing": 3,
+      "draft": "drafts/2026-W45/03-fakta-rusun-subsidi-manggarai-yang-belum-dibangu.md"
+    }
+  ],
+  "tokens": {
+    "calls": 41,
+    "prompt_tokens": 75480,
+    "completion_tokens": 9743,
+    "total_tokens": 85223
+  },
+  "errors": [],
+  "status": "ok",
+  "relevance_rejected": 512,
+  "dedupe_dropped": [
+    {
+      "url": "https://www.detik.com/properti/berita/d-8741300/sebelum-jadi-senator-as-abdul-el-sayed-juragan-kontrakan",
+      "title": "Sebelum Jadi Senator AS, Abdul El-Sayed Juragan Kontrakan",
+      "reason": "same_story",
+      "duplicate_of": "https://www.detik.com/properti/berita/d-8741879/saat-juragan-kontrakan-jadi-senator-muslim-pertama-di-as",
+      "duplicate_of_title": "Saat Juragan Kontrakan Jadi Senator Muslim Pertama di AS",
+      "sequence_ratio": 0.393,
+      "shared_specific_words": [
+        "juragan",
+        "kontrakan",
+        "senator"
+      ],
+      "rarity_score": 2.26
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8737998/3-bulan-usai-groundbreaking-belum-ada-pekerjaan-di-rusun-subsidi-manggarai",
+      "title": "3 Bulan Usai Groundbreaking, Belum Ada Pekerjaan di Rusun Subsidi Manggarai",
+      "reason": "same_story",
+      "duplicate_of": "https://www.detik.com/properti/berita/d-8738285/3-bulan-usai-groundbreaking-rusun-manggarai-baru-digarap-tahun-depan",
+      "duplicate_of_title": "3 Bulan Usai Groundbreaking, Rusun Manggarai Baru Digarap Tahun Depan",
+      "sequence_ratio": 0.606,
+      "shared_specific_words": [
+        "bulan",
+        "groundbreaking",
+        "manggarai"
+      ],
+      "rarity_score": 1.91
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8737692/diperebutkan-1-500-orang-rusun-subsidi-manggarai-dibanderol-rp-294-juta",
+      "title": "Diperebutkan 1.500 Orang, Rusun Subsidi Manggarai Dibanderol Rp 294 Juta!",
+      "reason": "same_story",
+      "duplicate_of": "https://www.detik.com/properti/berita/d-8738846/fakta-rusun-subsidi-manggarai-yang-belum-dibangun-tapi-sudah-diburu-1-500-orang",
+      "duplicate_of_title": "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+      "sequence_ratio": 0.467,
+      "shared_specific_words": [
+        "500",
+        "manggarai",
+        "orang"
+      ],
+      "rarity_score": 1.59
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8737613/ada-1-500-orang-mau-beli-rusun-subsidi-manggarai-kapan-mulai-dijual",
+      "title": "Ada 1.500 Orang Mau Beli Rusun Subsidi Manggarai, Kapan Mulai Dijual?",
+      "reason": "same_story",
+      "duplicate_of": "https://www.detik.com/properti/berita/d-8738846/fakta-rusun-subsidi-manggarai-yang-belum-dibangun-tapi-sudah-diburu-1-500-orang",
+      "duplicate_of_title": "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+      "sequence_ratio": 0.493,
+      "shared_specific_words": [
+        "500",
+        "manggarai",
+        "orang"
+      ],
+      "rarity_score": 1.59
+    },
+    {
+      "url": "https://www.detik.com/properti/berita/d-8736300/belum-resmi-dijual-rusun-subsidi-di-manggarai-sudah-diserbu-1-500-orang",
+      "title": "Belum Resmi Dijual, Rusun Subsidi di Manggarai Sudah Diserbu 1.500 Orang!",
+      "reason": "same_story",
+      "duplicate_of": "https://www.detik.com/properti/berita/d-8738846/fakta-rusun-subsidi-manggarai-yang-belum-dibangun-tapi-sudah-diburu-1-500-orang",
+      "duplicate_of_title": "Fakta Rusun Subsidi Manggarai yang Belum Dibangun tapi Sudah Diburu 1.500 Orang",
+      "sequence_ratio": 0.64,
+      "shared_specific_words": [
+        "500",
+        "manggarai",
+        "orang"
+      ],
+      "rarity_score": 1.59
+    },
+    {
+      "url": "https://www.cnnindonesia.com/ekonomi/20261105135747-92-1423662/dukung-pembiayaan-perumahan-bank-bjb-sabet-penghargaan-cnn-indonesia",
+      "title": "Dukung Pembiayaan Perumahan, Bank BJB Sabet Penghargaan CNN Indonesia",
+      "reason": "same_story",
+      "duplicate_of": "https://www.cnnindonesia.com/ekonomi/20261105230230-92-1423931/garap-proyek-strategis-nasional-ptpp-sabet-cnn-indonesia-awards",
+      "duplicate_of_title": "Garap Proyek Strategis Nasional, PTPP Sabet CNN Indonesia Awards",
+      "sequence_ratio": 0.443,
+      "shared_specific_words": [
+        "cnn",
+        "indonesia",
+        "sabet"
+      ],
+      "rarity_score": 2.45
+    }
+  ],
+  "drafts": [
+    "drafts/2026-W45/01-survei-bi-harga-rumah-naik-tipis-penjualan-anjlo.md",
+    "drafts/2026-W45/02-190-ribuan-rumah-subsidi-terjual-buruh-pekerja-s.md",
+    "drafts/2026-W45/03-fakta-rusun-subsidi-manggarai-yang-belum-dibangu.md"
+  ]
+}

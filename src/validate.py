@@ -59,16 +59,30 @@ def validate(caption: str, facts: list[Fact], source_display: str) -> list[Failu
     want = cfg["hashtag_count"]
     required = cfg["required_hashtag"]
     if len(tags) != want:
-        failures.append(Failure(
-            "hashtag_count",
-            f"Found {len(tags)} hashtags {tags}, need exactly {want} "
-            f"({required} plus one topic hashtag).",
-        ))
+        if not tags:
+            # The commonest real failure by far. The message has to say what
+            # to do, not just what is wrong: when it only reported the count,
+            # the model returned a byte-identical caption on every retry.
+            failures.append(Failure(
+                "hashtag_count",
+                f"The caption has no hashtags. ADD a new final line "
+                f"containing exactly {want} hashtags: {required} followed by "
+                f"one topic hashtag, for example \"{required} #KPR\". Keep "
+                f"the rest of the caption as it is.",
+            ))
+        else:
+            failures.append(Failure(
+                "hashtag_count",
+                f"Found {len(tags)} hashtags {tags}, need exactly {want}. "
+                f"Rewrite the final line as {required} plus exactly one topic "
+                f"hashtag.",
+            ))
     lowered = [t.lower() for t in tags]
     if required.lower() not in lowered:
         failures.append(Failure(
             "required_hashtag",
-            f"Required hashtag {required} is missing. Found {tags}.",
+            f"Required hashtag {required} is missing. Found {tags}. The final "
+            f"line must start with {required}.",
         ))
     elif len(tags) == want:
         topic = [t for t in tags if t.lower() != required.lower()]

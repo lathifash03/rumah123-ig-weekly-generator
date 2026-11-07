@@ -354,6 +354,11 @@ def quantity_claims(
             while j < len(tokens) and tokens[j] in _ID_NUMBER_TOKEN:
                 run.append(tokens[j])
                 j += 1
+            # A bare scale word is not a quantity. The first real run
+            # reported "juta" in "ratusan juta" as the number one million.
+            if all(tok in _SCALE_MULTIPLIER or tok in _ID_SCALE for tok in run):
+                i = max(j, i + 1)
+                continue
             parsed = _parse_id_number(run)
             if parsed is None:
                 i = max(j, i + 1)
