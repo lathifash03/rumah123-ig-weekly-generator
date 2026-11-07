@@ -300,64 +300,69 @@ No prompt was changed in response to the seeded results.
 
 ## What went wrong
 
-Facts from `run_log.json` and the commit history. All of these were found by
-running the thing, not by reading the code.
+1. The model kept dropping the hashtags. In one case it returned the exact
+   same caption three times in a row.
+2. My first retry did not show the model its own previous caption, so it could
+   not keep what was already fine. Run 1 passed 0 of 9.
+3. My dedupe rule never fired. I only found out when I tried it on real
+   headlines.
+4. Wrong claims like "paling tajam" and "tidak berubah" passed the gate. I
+   only noticed them when I read the drafts, with Claude's help. That led to
+   the hedge and superlative rule.
+5. Two facts were thrown out because the model's quote was not exact.
 
-- The dedupe step dropped 0 items on its first live dry run. Its threshold
-  required a 0.82 character-sequence ratio between titles; measured on the 43
-  real candidates, genuine retellings of one story reach only about 0.64. The
-  rule could not fire at all, and 9 headlines about one apartment project in
-  Manggarai all reached the ranker.
-- Replacing it surfaced three further problems: counting all shared words
-  equally fails when one story dominates a week (`manggarai` appeared in 10 of
-  43 titles, so it stopped looking rare); the relevance keywords had to be
-  excluded, because including them merged an Australian house-price story with
-  an Indonesian one; and the score had to be divided by log(N), or a threshold
-  calibrated on a busy week stops firing on a quiet one.
-- The first real run passed 0 of 9 variants. The retry message never included
-  the model's own previous caption, so the instruction to keep what was not
-  reported as broken was impossible to follow. One caption failed only on the
-  source name; the retry fixed the source and dropped both hashtags.
-- The generator named `Bank Indonesia`, an institution quoted inside the
-  facts, instead of the publisher `CNN Indonesia` given as the source. Every
-  caption in run 1 failed the source rule.
-- The generator converted a verified `Rp 294 juta` into `Rp 294000000`, a
-  figure appearing nowhere in the facts.
-- The hashtag line was about half of all validation failures across runs 1 to
-  3. The model omitted it entirely on roughly half of attempts, and on one
-  variant returned a byte-identical caption on all three attempts rather than
-  add the missing line. It was removed from the model's job in `generate.md`
-  v3: the model picks the topic, code assembles the line.
-- The claim-check coverage gate rejected duplicated sentences, which the model
-  produced intermittently in run 4. Skipping a sentence is the real risk;
-  a sentence returned twice is still checked.
+What I learned: an LLM needs tests before I can trust it. The claim checker
+was not stable, it caught one planted error only 2 times out of 3, so I would
+not trust a single run.
+
+### Where to verify each point
+
+| Point | Evidence in this repo |
+| --- | --- |
+| 1 | Commit `0cb286b` message. The identical-caption case was run 3, whose log was overwritten. |
+| 2 | Commit `0cb286b` message, and `src/generate.py` `build_user_message`, which now carries the previous caption. |
+| 3 | Commit `c6b9d36` message, and `tests/test_filter.py::test_regression_sequence_threshold_is_reachable_in_practice`. |
+| 4 | `git show 0cb286b:run_log.json` holds run 5. Both phrases appear in captions that **passed**: "paling tajam" in variant B of item 1, "tidak berubah" in variant C. Caught now by `tests/test_validate_hedges.py`. |
+| 5 | `run_log.json`, `extraction[].dropped_detail`, reason `quote_not_found_in_article`. Same in run 5 and run 6. |
+| Instability | `eval/seeded_results.md` and `eval/seeded_run.json`: `E07` caught 2 of 3. |
+
+Runs 1 to 4 each overwrote `run_log.json` and were never committed, so points
+1 and 2 are traceable only to commit messages rather than to a log file. Run 5
+onwards is recoverable from git history.
+
+### Also in the logs, not in the summary above
+
 - Three bugs were found by writing the tests, before any API call. Number
   grounding compared substrings, so `"naik 8 persen"` passed against a
   verified `"8,43 persen"`. Banned-phrase matching compared substrings, so
   `cuan` was flagged inside `suku bunga acuan`. And the `123` in `Rumah123`
   was reported as an ungrounded number.
+- Replacing the dedupe rule surfaced three further problems: counting all
+  shared words equally fails when one story dominates a week (`manggarai`
+  appeared in 10 of 43 titles, so it stopped looking rare); the relevance
+  keywords had to be excluded, because including them merged an Australian
+  house-price story with an Indonesian one; and the score had to be divided by
+  log(N), or a threshold calibrated on a busy week stops firing on a quiet one.
+- The generator named `Bank Indonesia`, an institution quoted inside the
+  facts, instead of the publisher `CNN Indonesia` given as the source. Every
+  caption in run 1 failed the source rule.
+- The generator converted a verified `Rp 294 juta` into `Rp 294000000`, a
+  figure appearing nowhere in the facts.
+- The claim-check coverage gate rejected duplicated sentences, which the model
+  produced intermittently in run 4. Skipping a sentence is the real risk; a
+  sentence returned twice is still checked.
 - `count_emoji` counted codepoints, so a flag counted as two emoji and a
   caption with one flag failed the max-one-emoji rule.
 - A bare scale word was read as a quantity, so `"ratusan juta"` was reported
   as the number one million.
-- A live API key was pasted into the tracked `.env.example`. It never reached
-  a commit; `test_env_example_has_no_filled_in_key` caught it.
-- Run 5 shipped four overstatements that no rule existed to catch: `tidak
-  berubah` for a verified `relatif stabil`, `paling tajam` for a plain figure,
-  `akan mulai Januari 2027` for a verified `ditargetkan`, and three approved
-  captions that were a single paragraph of 57, 71 and 79 words. The three
-  rules added after run 5 reject all of them, and the pass rate fell from 78%
-  to 67% as a result.
 - The superlative rule immediately rejected this project's own test fixture,
-  which asked "apa langkah pertama yang paling masuk akal?". The rule was
-  kept and the fixture changed.
+  which asked "apa langkah pertama yang paling masuk akal?". The rule was kept
+  and the fixture changed.
 - Two seeded-error passes scored 10 of 10 and then 9 of 10 on identical
   inputs. Reporting either would have reported luck, which is why that harness
   repeats each case.
-- Two seeded cases were written with an accidental second fault, both an
-  unintended `paling` in the closing question, which the code rule flagged
-  before any API call. The fixtures were corrected so each case carries one
-  planted fault.
+- A live API key was pasted into the tracked `.env.example`. It never reached a
+  commit; `test_env_example_has_no_filled_in_key` caught it.
 
 ## GitHub Actions status
 
