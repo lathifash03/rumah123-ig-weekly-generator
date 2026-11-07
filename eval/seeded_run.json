@@ -1,0 +1,803 @@
+{
+  "model": "gpt-4.1-mini",
+  "repeats": 3,
+  "prompt_versions": {
+    "claimcheck.md": "c2b7821420aa7825",
+    "extract.md": "250e0ac491bc3e2a",
+    "generate.md": "8ecc520915153eb2",
+    "rank.md": "1c56454f3ef6bdb9"
+  },
+  "results": [
+    {
+      "id": "E01",
+      "error_type": "inserted_superlative",
+      "should_be_caught": true,
+      "planted": "\"paling tajam\" asserts a ranking. The facts give 10,78 persen as a figure and never rank it.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "unsupported_superlative"
+      ],
+      "code_messages": [
+        "[unsupported_superlative] These superlative or absolute words are not used by the verified facts: ['paling']. The facts do not establish a ranking or a certainty, so remove the word or restate it as the facts do."
+      ],
+      "llm_rules_union": [
+        "mislabelled_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "mislabelled_claim"
+          ],
+          "llm_messages": [
+            "[mislabelled_claim] Sentence \"Menurut kamu, apa yang bikin penjualan melemah?\" was labelled non-factual but it asserts change ['melemah']. It is a factual claim and must be supported by the verified facts, or removed."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "reclassified_as_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "mislabelled_claim"
+          ],
+          "llm_messages": [
+            "[mislabelled_claim] Sentence \"Menurut kamu, apa yang bikin penjualan melemah?\" was labelled non-factual but it asserts change ['melemah']. It is a factual claim and must be supported by the verified facts, or removed."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "reclassified_as_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "mislabelled_claim"
+          ],
+          "llm_messages": [
+            "[mislabelled_claim] Sentence \"Menurut kamu, apa yang bikin penjualan melemah?\" was labelled non-factual but it asserts change ['melemah']. It is a factual claim and must be supported by the verified facts, or removed."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "reclassified_as_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "error_type": "dropped_hedge",
+      "should_be_caught": true,
+      "planted": "The fact hedges with \"relatif stabil\". The caption states it flatly as \"tidak berubah\".",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "dropped_hedge",
+        "unsupported_superlative"
+      ],
+      "code_messages": [
+        "[unsupported_superlative] These superlative or absolute words are not used by the verified facts: ['tidak berubah']. The facts do not establish a ranking or a certainty, so remove the word or restate it as the facts do.",
+        "[dropped_hedge] Sentence \"Menurut CNN Indonesia, suku bunga KPR tidak berubah di level 7,47 persen pada kuartal III 2026.\" states ['7,47'] as fact, but the verified fact hedges it with \"relatif\". Keep the hedge, for example with \"ditargetkan\", \"direncanakan\" or \"sekitar\"."
+      ],
+      "llm_rules_union": [
+        "mislabelled_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "mislabelled_claim"
+          ],
+          "llm_messages": [
+            "[mislabelled_claim] Sentence \"Kadang kamu menunggu bunga turun sebelum mulai.\" was labelled non-factual but it asserts change ['turun']. It is a factual claim and must be supported by the verified facts, or removed."
+          ],
+          "llm_verdicts": [
+            "reclassified_as_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "mislabelled_claim"
+          ],
+          "llm_messages": [
+            "[mislabelled_claim] Sentence \"Kadang kamu menunggu bunga turun sebelum mulai.\" was labelled non-factual but it asserts change ['turun']. It is a factual claim and must be supported by the verified facts, or removed."
+          ],
+          "llm_verdicts": [
+            "reclassified_as_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "mislabelled_claim"
+          ],
+          "llm_messages": [
+            "[mislabelled_claim] Sentence \"Kadang kamu menunggu bunga turun sebelum mulai.\" was labelled non-factual but it asserts change ['turun']. It is a factual claim and must be supported by the verified facts, or removed."
+          ],
+          "llm_verdicts": [
+            "reclassified_as_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "error_type": "changed_number",
+      "should_be_caught": true,
+      "planted": "The fact says 0,58 persen. The caption says 0,85 persen, a transposition.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "ungrounded_number"
+      ],
+      "code_messages": [
+        "[ungrounded_number] These numbers are not in the verified facts: ['0,85']. Remove them or use only figures the facts state."
+      ],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, harga properti residensial di pasar primer tumbuh 0,85 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, harga properti residensial di pasar primer tumbuh 0,85 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, harga properti residensial di pasar primer tumbuh 0,85 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E04",
+      "error_type": "rounded_number",
+      "should_be_caught": true,
+      "planted": "The fact says 8,43 persen. The caption rounds it to 8 persen.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "ungrounded_number"
+      ],
+      "code_messages": [
+        "[ungrounded_number] These numbers are not in the verified facts: ['8']. Remove them or use only figures the facts state."
+      ],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, penjualan hunian anjlok 8 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, penjualan hunian anjlok 8 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, penjualan hunian anjlok 8 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E05",
+      "error_type": "number_as_indonesian_word",
+      "should_be_caught": true,
+      "planted": "The fact says 4,80 persen. The caption writes \"lima persen\", a rounding in words.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "ungrounded_number_word"
+      ],
+      "code_messages": [
+        "[ungrounded_number_word] These quantities written in words are not in the verified facts: ['lima persen']. Remove them or use only figures the facts state, written the way the facts write them."
+      ],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, nilai KPR tumbuh lima persen secara tahunan pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, nilai KPR tumbuh lima persen secara tahunan pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, nilai KPR tumbuh lima persen secara tahunan pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E06",
+      "error_type": "merged_two_facts",
+      "should_be_caught": true,
+      "planted": "One sentence fuses the 0,58 persen price fact and the 8,43 persen sales fact, so no single verified quote supports it.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": false,
+      "code_rules": [],
+      "code_messages": [],
+      "llm_rules_union": [
+        "unsupported_claim",
+        "unsupported_figure",
+        "unverifiable_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unverifiable_claim"
+          ],
+          "llm_messages": [
+            "[unverifiable_claim] Claim \"Menurut CNN Indonesia, harga properti residensial tumbuh 0,58 persen sementara penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_not_found_in_facts",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim",
+            "unsupported_figure"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Pasar rumah sedang bergerak dua arah.\" is not supported by the verified facts. Remove it or restate it using only what the facts say.",
+            "[unsupported_figure] Claim \"Menurut CNN Indonesia, harga properti residensial tumbuh 0,58 persen sementara penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\" cites figures ['8,43'] that do not appear in its own supporting quote. Use only figures the quote states.",
+            "[unsupported_figure] Claim \"Menurut CNN Indonesia, harga properti residensial tumbuh 0,58 persen sementara penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\" cites figures ['0,58'] that do not appear in its own supporting quote. Use only figures the quote states."
+          ],
+          "llm_verdicts": [
+            "model_said_unsupported",
+            "figures_not_in_quote",
+            "figures_not_in_quote",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unverifiable_claim"
+          ],
+          "llm_messages": [
+            "[unverifiable_claim] Claim \"Menurut CNN Indonesia, harga properti residensial tumbuh 0,58 persen sementara penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\" was marked supported but its supporting quote is not found in the verified facts. Treat it as unsupported and remove it."
+          ],
+          "llm_verdicts": [
+            "quote_and_figures_verified",
+            "quote_not_found_in_facts",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E07",
+      "error_type": "wrong_attribution",
+      "should_be_caught": true,
+      "planted": "The figure comes from Bank Indonesia. The caption credits Badan Pusat Statistik.",
+      "repeats": 3,
+      "caught_in_trials": 2,
+      "llm_caught_in_trials": 2,
+      "caught_always": false,
+      "caught_ever": true,
+      "caught_by_code": false,
+      "code_rules": [],
+      "code_messages": [],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, Badan Pusat Statistik mencatat harga properti residensial di pasar primer tumbuh 0,58 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, Badan Pusat Statistik mencatat harga properti residensial di pasar primer tumbuh 0,58 persen pada kuartal III 2026.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E08",
+      "error_type": "invented_claim",
+      "should_be_caught": true,
+      "planted": "A whole claim about a future government rate cut appears nowhere in the facts.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": false,
+      "code_rules": [],
+      "code_messages": [],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Pemerintah akan menurunkan bunga KPR subsidi mulai tahun depan.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Pemerintah akan menurunkan bunga KPR subsidi mulai tahun depan.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Pemerintah akan menurunkan bunga KPR subsidi mulai tahun depan.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E09",
+      "error_type": "overclaim_broader_than_evidence",
+      "should_be_caught": true,
+      "planted": "The facts cover one quarter. The caption claims prices always rise every quarter.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "unsupported_superlative"
+      ],
+      "code_messages": [
+        "[unsupported_superlative] These superlative or absolute words are not used by the verified facts: ['selalu']. The facts do not establish a ranking or a certainty, so remove the word or restate it as the facts do."
+      ],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, harga properti residensial di pasar primer selalu naik setiap kuartal.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, harga properti residensial di pasar primer selalu naik setiap kuartal.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Menurut CNN Indonesia, harga properti residensial di pasar primer selalu naik setiap kuartal.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "E10",
+      "error_type": "false_certainty_about_the_future",
+      "should_be_caught": true,
+      "planted": "\"pasti\" promises a future the facts do not contain.",
+      "repeats": 3,
+      "caught_in_trials": 3,
+      "llm_caught_in_trials": 3,
+      "caught_always": true,
+      "caught_ever": true,
+      "caught_by_code": true,
+      "code_rules": [
+        "unsupported_superlative"
+      ],
+      "code_messages": [
+        "[unsupported_superlative] These superlative or absolute words are not used by the verified facts: ['pasti']. The facts do not establish a ranking or a certainty, so remove the word or restate it as the facts do."
+      ],
+      "llm_rules_union": [
+        "unsupported_claim"
+      ],
+      "trials": [
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Tahun depan harga pasti ikut turun.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Tahun depan harga pasti ikut turun.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [
+            "unsupported_claim"
+          ],
+          "llm_messages": [
+            "[unsupported_claim] Claim \"Tahun depan harga pasti ikut turun.\" is not supported by the verified facts. Remove it or restate it using only what the facts say."
+          ],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "model_said_unsupported",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "C01",
+      "error_type": "control_clean",
+      "should_be_caught": false,
+      "planted": "No planted fault. Every figure matches a verified quote and the hedge on the rate fact is kept.",
+      "repeats": 3,
+      "caught_in_trials": 0,
+      "llm_caught_in_trials": 0,
+      "caught_always": false,
+      "caught_ever": false,
+      "caught_by_code": false,
+      "code_rules": [],
+      "code_messages": [],
+      "llm_rules_union": [],
+      "trials": [
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "error_type": "control_clean",
+      "should_be_caught": false,
+      "planted": "No planted fault. Uses two separate facts in two separate sentences, each with its own figure.",
+      "repeats": 3,
+      "caught_in_trials": 0,
+      "llm_caught_in_trials": 0,
+      "caught_always": false,
+      "caught_ever": false,
+      "caught_by_code": false,
+      "code_rules": [],
+      "code_messages": [],
+      "llm_rules_union": [],
+      "trials": [
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        },
+        {
+          "llm_rules": [],
+          "llm_messages": [],
+          "llm_verdicts": [
+            "non_factual",
+            "quote_and_figures_verified",
+            "quote_and_figures_verified",
+            "non_factual",
+            "non_factual"
+          ],
+          "llm_error": null
+        }
+      ]
+    }
+  ],
+  "tokens": {
+    "calls": 36,
+    "prompt_tokens": 45540,
+    "completion_tokens": 5870,
+    "total_tokens": 51410
+  },
+  "generated_utc": "2026-11-07T04:48:33.099206+00:00"
+}

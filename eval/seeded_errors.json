@@ -1,0 +1,112 @@
+{
+  "about": "Seeded-error test set for the claim checker and the pure-code validators. Every case is built from ONE set of verified facts, taken verbatim from the real run recorded in run_log.json (CNN Indonesia, 2026-11-06). Each error case carries exactly one planted fault. The two controls are faithful to the facts and should produce no failure. No prompt was changed in response to results on this set.",
+  "source_display": "CNN Indonesia",
+  "facts": [
+    {
+      "claim": "Harga properti residensial di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan.",
+      "quote": "Bank Indonesia (BI) mencatat harga properti residensial alias rumah di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan (yoy)."
+    },
+    {
+      "claim": "Penjualan hunian anjlok 8,43 persen pada kuartal III 2026 secara tahunan.",
+      "quote": "penjualan hunian justru anjlok 8,43 persen pada kuartal III 2026 dibandingkan periode yang sama tahun lalu."
+    },
+    {
+      "claim": "Penjualan rumah tipe besar merosot 10,78 persen.",
+      "quote": "Penjualan rumah tipe besar merosot 10,78 persen."
+    },
+    {
+      "claim": "Suku bunga KPR relatif stabil di level 7,47 persen pada kuartal III 2026.",
+      "quote": "suku bunga KPR tercatat relatif stabil di level 7,47 persen pada kuartal III 2026."
+    },
+    {
+      "claim": "Nilai KPR tumbuh 4,80 persen secara tahunan pada kuartal III 2026.",
+      "quote": "nilai KPR secara tahunan justru tumbuh 4,80 persen pada kuartal III 2026"
+    }
+  ],
+  "cases": [
+    {
+      "id": "E01",
+      "error_type": "inserted_superlative",
+      "should_be_caught": true,
+      "planted": "\"paling tajam\" asserts a ranking. The facts give 10,78 persen as a figure and never rank it.",
+      "caption": "Pernah bandingkan jumlah rumah yang terjual tiap bulan?\n\nMenurut CNN Indonesia, penurunan paling tajam terjadi pada rumah tipe besar yang merosot 10,78 persen.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa yang bikin penjualan melemah?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "E02",
+      "error_type": "dropped_hedge",
+      "should_be_caught": true,
+      "planted": "The fact hedges with \"relatif stabil\". The caption states it flatly as \"tidak berubah\".",
+      "caption": "Kadang kamu menunggu bunga turun sebelum mulai.\n\nMenurut CNN Indonesia, suku bunga KPR tidak berubah di level 7,47 persen pada kuartal III 2026.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa yang kamu tunggu sebelum mulai?\n\n#Rumah123 #KPR"
+    },
+    {
+      "id": "E03",
+      "error_type": "changed_number",
+      "should_be_caught": true,
+      "planted": "The fact says 0,58 persen. The caption says 0,85 persen, a transposition.",
+      "caption": "Kamu mungkin merasa harga rumah bergerak terus.\n\nMenurut CNN Indonesia, harga properti residensial di pasar primer tumbuh 0,85 persen pada kuartal III 2026.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa langkah pertama yang masuk akal?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "E04",
+      "error_type": "rounded_number",
+      "should_be_caught": true,
+      "planted": "The fact says 8,43 persen. The caption rounds it to 8 persen.",
+      "caption": "Menabung sambil melihat harga bergerak itu melelahkan.\n\nMenurut CNN Indonesia, penjualan hunian anjlok 8 persen pada kuartal III 2026.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, kapan waktu yang pas buat mulai?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "E05",
+      "error_type": "number_as_indonesian_word",
+      "should_be_caught": true,
+      "planted": "The fact says 4,80 persen. The caption writes \"lima persen\", a rounding in words.",
+      "caption": "Kamu mungkin penasaran soal nilai KPR sekarang.\n\nMenurut CNN Indonesia, nilai KPR tumbuh lima persen secara tahunan pada kuartal III 2026.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa yang bikin kamu ragu?\n\n#Rumah123 #KPR"
+    },
+    {
+      "id": "E06",
+      "error_type": "merged_two_facts",
+      "should_be_caught": true,
+      "planted": "One sentence fuses the 0,58 persen price fact and the 8,43 persen sales fact, so no single verified quote supports it.",
+      "caption": "Pasar rumah sedang bergerak dua arah.\n\nMenurut CNN Indonesia, harga properti residensial tumbuh 0,58 persen sementara penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, mana yang lebih kamu perhatikan?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "E07",
+      "error_type": "wrong_attribution",
+      "should_be_caught": true,
+      "planted": "The figure comes from Bank Indonesia. The caption credits Badan Pusat Statistik.",
+      "caption": "Data baru soal harga rumah sudah keluar.\n\nMenurut CNN Indonesia, Badan Pusat Statistik mencatat harga properti residensial di pasar primer tumbuh 0,58 persen pada kuartal III 2026.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, data mana yang kamu percaya?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "E08",
+      "error_type": "invented_claim",
+      "should_be_caught": true,
+      "planted": "A whole claim about a future government rate cut appears nowhere in the facts.",
+      "caption": "Ada hal yang bisa bikin kamu sedikit lega.\n\nMenurut CNN Indonesia, suku bunga KPR relatif stabil di level 7,47 persen pada kuartal III 2026.\n\nPemerintah akan menurunkan bunga KPR subsidi mulai tahun depan.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa yang kamu tunggu?\n\n#Rumah123 #KPR"
+    },
+    {
+      "id": "E09",
+      "error_type": "overclaim_broader_than_evidence",
+      "should_be_caught": true,
+      "planted": "The facts cover one quarter. The caption claims prices always rise every quarter.",
+      "caption": "Rasanya harga rumah tidak pernah berhenti bergerak.\n\nMenurut CNN Indonesia, harga properti residensial di pasar primer selalu naik setiap kuartal.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa yang bikin kamu bertahan menabung?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "E10",
+      "error_type": "false_certainty_about_the_future",
+      "should_be_caught": true,
+      "planted": "\"pasti\" promises a future the facts do not contain.",
+      "caption": "Banyak yang bertanya soal arah harga rumah.\n\nMenurut CNN Indonesia, penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\n\nTahun depan harga pasti ikut turun.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa yang kamu rencanakan?\n\n#Rumah123 #HargaRumah"
+    },
+    {
+      "id": "C01",
+      "error_type": "control_clean",
+      "should_be_caught": false,
+      "planted": "No planted fault. Every figure matches a verified quote and the hedge on the rate fact is kept.",
+      "caption": "Kadang kamu merasa proses punya rumah berjalan lambat.\n\nMenurut CNN Indonesia, harga properti residensial di pasar primer tumbuh 0,58 persen pada kuartal III 2026 secara tahunan.\n\nSuku bunga KPR tercatat relatif stabil di level 7,47 persen.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, apa langkah pertama yang masuk akal?\n\n#Rumah123 #KPR"
+    },
+    {
+      "id": "C02",
+      "error_type": "control_clean",
+      "should_be_caught": false,
+      "planted": "No planted fault. Uses two separate facts in two separate sentences, each with its own figure.",
+      "caption": "Angka penjualan rumah kuartal ini sudah keluar.\n\nMenurut CNN Indonesia, penjualan hunian anjlok 8,43 persen pada kuartal III 2026.\n\nPenjualan rumah tipe besar merosot 10,78 persen.\n\nDi Rumah123 kamu bisa lihat-lihat dengan tenang.\n\nMenurut kamu, tipe rumah seperti apa yang kamu cari?\n\n#Rumah123 #HargaRumah"
+    }
+  ]
+}
